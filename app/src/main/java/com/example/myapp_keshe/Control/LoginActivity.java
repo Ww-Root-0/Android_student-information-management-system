@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapp_keshe.Date.ContactAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 
@@ -21,6 +19,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     MyHelper myHelper;
     private EditText editTextuserName;
     private EditText editTextPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +61,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // 查询数据库中的用户名和密码
             Cursor cursor = db.query(
                     "users",              // 表名
-                    new String[]{"username", "password"},  // 返回的列
-                    "username=? AND password=?",  // WHERE 子句
+                    new String[]{"name", "password"},  // 返回的列
+                    "name=? AND password=?",  // WHERE 子句
                     new String[]{username, password},  // WHERE 子句中的占位符的值
                     null,                // GROUP BY
                     null,                // HAVING
@@ -73,18 +72,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (cursor.moveToFirst()) {
                 // 登录成功
                 Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-
                 // 跳转到新的页面
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
                 finish(); // 可选：关闭当前 Activity
-            }  else {
+            } else {
                 // 登录失败
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
             }
             // 关闭游标和数据库连接
             cursor.close();
             db.close();
+        } else if (v.getId() == R.id.registerbutton) {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+            finish(); // 可选：关闭当前 Activity
         }
     }
 

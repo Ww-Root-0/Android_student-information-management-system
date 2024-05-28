@@ -17,7 +17,11 @@ public class MyHelper extends SQLiteOpenHelper {
         // 创建用户表
         db.execSQL("CREATE TABLE users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "username TEXT, " +
+                "name TEXT, " +
+                "gender TEXT, " +
+                "phone TEXT, " +
+                "class TEXT, " +
+                "department TEXT, " +
                 "password TEXT)");
     }
 

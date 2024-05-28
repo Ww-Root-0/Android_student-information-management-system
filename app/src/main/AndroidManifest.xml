@@ -17,10 +17,20 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Control.ClassManagementActivity" />
+        <activity android:name=".Control.ClassQueryActivity" />
+        <activity android:name=".Control.CourseManagementActivity" />
+        <activity android:name=".Control.GradeManagementActivity" />
+        <activity android:name=".Control.GradeQueryActivity" />
+        <activity android:name=".Control.HomeActivity" />
+        <activity android:name=".Control.RegisterActivity" />
+        <activity android:name=".Control.StudentInfoQueryActivity" />
+        <activity android:name=".Control.StudentManagementActivity" />
+        <activity android:name=".Control.UserManagementActivity" />
     </application>
 
 </manifest>
