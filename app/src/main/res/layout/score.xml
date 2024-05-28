@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 输入学生学号的EditText -->
+    <EditText
+        android:id="@+id/etStudentID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="学生学号" />
+
+    <!-- 输入课程编号的EditText -->
+    <EditText
+        android:id="@+id/etCourseID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="课程编号" />
+
+    <!-- 输入成绩的EditText -->
+    <EditText
+        android:id="@+id/etGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="成绩" />
+
+    <!-- 添加按钮 -->
+    <Button
+        android:id="@+id/btnAddGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加成绩" />
+
+    <!-- 修改按钮 -->
+    <Button
+        android:id="@+id/btnUpdateGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="修改成绩" />
+
+    <!-- 删除按钮 -->
+    <Button
+        android:id="@+id/btnDeleteGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除成绩" />
+
+    <!-- 查询按钮 -->
+    <Button
+        android:id="@+id/btnSearchGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="查询成绩" />
+
+    <!-- 显示查询结果的TextView -->
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="查询结果：" />
+
+</LinearLayout>

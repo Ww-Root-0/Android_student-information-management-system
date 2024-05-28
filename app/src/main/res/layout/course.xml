@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 输入课程信息的EditText -->
+    <EditText
+        android:id="@+id/etCourseName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="课程名称" />
+
+    <EditText
+        android:id="@+id/etCourseID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="课程编号" />
+
+    <EditText
+        android:id="@+id/etCourseCredits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="学分" />
+
+    <!-- 添加按钮 -->
+    <Button
+        android:id="@+id/btnAddCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加课程" />
+
+    <!-- 修改按钮 -->
+    <Button
+        android:id="@+id/btnUpdateCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="修改课程信息" />
+
+    <!-- 删除按钮 -->
+    <Button
+        android:id="@+id/btnDeleteCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除课程" />
+
+</LinearLayout>
