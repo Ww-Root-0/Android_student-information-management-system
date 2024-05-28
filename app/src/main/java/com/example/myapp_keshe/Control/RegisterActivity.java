@@ -20,7 +20,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextName, editTextPhone, editTextClass, editTextDepartment, editTextPassword;
     private RadioGroup radioGroupGender;
-    private Button buttonRegister;
+    private Button buttonRegister,buttonBack;
     private MyHelper myHelper;
 
     @Override
@@ -40,11 +40,18 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         radioGroupGender = findViewById(R.id.radioGroupGender);
         buttonRegister = findViewById(R.id.buttonRegister);
+        buttonBack = findViewById(R.id.buttonBack);
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerUser();
+            }
+        });
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // 关闭当前 Activity 并返回到上一个 Activity
             }
         });
     }
@@ -63,7 +70,6 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
             return;
         }
-
         SQLiteDatabase db = myHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", name);

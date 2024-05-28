@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (v.getId() == R.id.registerbutton) {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
-            finish(); // 可选：关闭当前 Activity
         }
     }
 
