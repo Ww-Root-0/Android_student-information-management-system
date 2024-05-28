@@ -16,14 +16,11 @@ import com.example.myapp_keshe.Date.ContactAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 
-public class login extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     MyHelper myHelper;
     private EditText editTextuserName;
     private EditText editTextPassword;
-    private ListView listViewContacts;
-    private ContactAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +75,7 @@ public class login extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
 
                 // 跳转到新的页面
-                Intent intent = new Intent(this, home.class);
+                Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
                 finish(); // 可选：关闭当前 Activity
             }  else {
