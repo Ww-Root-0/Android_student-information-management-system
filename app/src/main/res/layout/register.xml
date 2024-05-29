@@ -45,7 +45,13 @@
                 android:text="女"
                 android:layout_marginStart="16dp" />
         </RadioGroup>
-
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:layout_marginBottom="16dp" />
         <EditText
             android:id="@+id/editTextPhone"
             android:layout_width="match_parent"
@@ -68,12 +74,31 @@
             android:hint="院系"
             android:layout_marginBottom="16dp" />
 
+
+
+        <!-- 新增的输入字段 -->
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/editTextAge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="密码"
-            android:inputType="textPassword"
+            android:hint="年龄"
+            android:inputType="number"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/editTextDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="出生日期 (YYYY-MM-DD)"
+            android:inputType="date"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="电子邮件"
+            android:inputType="textEmailAddress"
             android:layout_marginBottom="16dp" />
 
         <LinearLayout
