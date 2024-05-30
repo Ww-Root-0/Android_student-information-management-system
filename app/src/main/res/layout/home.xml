@@ -6,53 +6,34 @@
     android:gravity="center">
 
     <Button
-        android:id="@+id/btnClassQuery"
+        android:id="@+id/btnQuery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="班级信息查询" />
+        android:text="信息查询" />
 
     <Button
-        android:id="@+id/btnStudentInfoQuery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="学生信息查询" />
-
-    <Button
-        android:id="@+id/btnGradeQuery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="成绩查询" />
-
-    <Button
-        android:id="@+id/btnUserManagement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="账号管理" />
-
-    <Button
-        android:id="@+id/btnStudentManagement"
+        android:id="@+id/btnStudent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="学生管理" />
 
     <Button
-        android:id="@+id/btnCourseManagement"
+        android:id="@+id/btnCourse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="课程管理" />
 
     <Button
-        android:id="@+id/btnGradeManagement"
+        android:id="@+id/btnScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="成绩管理" />
 
     <Button
-        android:id="@+id/btnClassManagement"
+        android:id="@+id/btnClass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="班级管理" />
-
     <Button
         android:id="@+id/btnExit"
         android:layout_width="wrap_content"

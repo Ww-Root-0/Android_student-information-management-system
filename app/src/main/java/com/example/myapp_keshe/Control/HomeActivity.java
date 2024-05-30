@@ -21,14 +21,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init() {
         // 初始化按钮并设置点击监听器
-        findViewById(R.id.btnClassQuery).setOnClickListener(this);
-        findViewById(R.id.btnStudentInfoQuery).setOnClickListener(this);
-        findViewById(R.id.btnGradeQuery).setOnClickListener(this);
-        findViewById(R.id.btnUserManagement).setOnClickListener(this);
-        findViewById(R.id.btnStudentManagement).setOnClickListener(this);
-        findViewById(R.id.btnCourseManagement).setOnClickListener(this);
-        findViewById(R.id.btnGradeManagement).setOnClickListener(this);
-        findViewById(R.id.btnClassManagement).setOnClickListener(this);
+        findViewById(R.id.btnQuery).setOnClickListener(this);
+        findViewById(R.id.btnStudent).setOnClickListener(this);
+        findViewById(R.id.btnCourse).setOnClickListener(this);
+        findViewById(R.id.btnScore).setOnClickListener(this);
+        findViewById(R.id.btnClass).setOnClickListener(this);
         findViewById(R.id.btnExit).setOnClickListener(this);
     }
 
@@ -36,28 +33,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.btnClassQuery) {
-            // 跳转到班级查询界面
-            startActivity(new Intent(this, ClassQueryActivity.class));
-        } else if (id == R.id.btnStudentInfoQuery) {
-            // 跳转到学生信息查询界面
-            startActivity(new Intent(this, StudentInfoQueryActivity.class));
-        } else if (id == R.id.btnGradeQuery) {
-            // 跳转到成绩查询界面
-            startActivity(new Intent(this, GradeQueryActivity.class));
-        } else if (id == R.id.btnUserManagement) {
-            // 跳转到用户管理界面
-            startActivity(new Intent(this, UserManagementActivity.class));
-        } else if (id == R.id.btnStudentManagement) {
+        if (id == R.id.btnQuery) {
+            // 跳转到信息查询界面
+            startActivity(new Intent(this, SearchActivity.class));
+        } else if (id == R.id.btnStudent) {
             // 跳转到学生管理界面
-            startActivity(new Intent(this, StudentManagementActivity.class));
-        } else if (id == R.id.btnCourseManagement) {
+            startActivity(new Intent(this, StudentActivity.class));
+        } else if (id == R.id.btnCourse) {
             // 跳转到课程管理界面
             startActivity(new Intent(this, CourseManagementActivity.class));
-        } else if (id == R.id.btnGradeManagement) {
+        } else if (id == R.id.btnScore) {
             // 跳转到成绩管理界面
             startActivity(new Intent(this, GradeManagementActivity.class));
-        } else if (id == R.id.btnClassManagement) {
+        } else if (id == R.id.btnClass) {
             // 跳转到班级管理界面
             startActivity(new Intent(this, ClassManagementActivity.class));
         } else if (id == R.id.btnExit) {
