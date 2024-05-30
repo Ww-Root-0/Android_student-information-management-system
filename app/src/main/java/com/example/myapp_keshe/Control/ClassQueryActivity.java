@@ -1,9 +1,11 @@
 package com.example.myapp_keshe.Control;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -50,6 +52,33 @@ public class ClassQueryActivity extends AppCompatActivity {
                 searchStudents();
             }
         });
+
+        // 设置ListView的点击事件监听器
+        listViewStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 获取点击的学生信息
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
+                int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
+                String phone = cursor.getString(cursor.getColumnIndexOrThrow("phone"));
+                String className = cursor.getString(cursor.getColumnIndexOrThrow("class"));
+                String department = cursor.getString(cursor.getColumnIndexOrThrow("department"));
+
+                // 启动UserDetailActivity并传递学生信息
+                Intent intent = new Intent(ClassQueryActivity.this, UserManagementActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("password", password);
+                intent.putExtra("gender", gender);
+                intent.putExtra("age", age);
+                intent.putExtra("phone", phone);
+                intent.putExtra("class", className);
+                intent.putExtra("department", department);
+                startActivity(intent);
+            }
+        });
     }
 
     // 查询学生信息的方法
@@ -70,7 +99,7 @@ public class ClassQueryActivity extends AppCompatActivity {
         // 查询数据库中的学生信息
         Cursor cursor = db.query(
                 "users",              // 表名
-                new String[]{"_id", "name", "gender", "phone", "class", "department"},  // 返回的列
+                new String[]{"_id", "name", "gender", "phone", "class", "department", "age","password"},  // 返回的列
                 "class=?",  // WHERE 子句
                 new String[]{className},  // WHERE 子句中的占位符的值
                 null,                // GROUP BY 子句
@@ -88,8 +117,8 @@ public class ClassQueryActivity extends AppCompatActivity {
                     this,
                     R.layout.listview, // 使用指定的简单列表项布局
                     cursor,
-                    new String[]{"name", "phone"}, // 显示学生姓名和电话
-                    new int[]{R.id.textViewName, R.id.textViewPhone}, // 映射到布局中的TextView
+                    new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
+                    new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
                     0
             );
             // 设置适配器到ListView

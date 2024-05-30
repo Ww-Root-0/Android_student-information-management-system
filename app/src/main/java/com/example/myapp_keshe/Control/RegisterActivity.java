@@ -18,7 +18,7 @@ import com.example.myapp_keshe.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText editTextName, editTextPhone, editTextClass, editTextPassword, editTextAge, editTextDateOfBirth, editTextEmail;
+    private EditText editTextName, editTextPhone, editTextClass, editTextPassword, editTextAge, editTextDepartment;
     private RadioGroup radioGroupGender;
     private Button buttonRegister, buttonBack;
     private MyHelper myHelper;
@@ -38,8 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextClass = findViewById(R.id.editTextClass);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextAge = findViewById(R.id.editTextAge);
-        editTextDateOfBirth = findViewById(R.id.editTextDateOfBirth);
-        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextDepartment = findViewById(R.id.editTextDepartment);
         radioGroupGender = findViewById(R.id.radioGroupGender);
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonBack = findViewById(R.id.buttonBack);
@@ -64,13 +63,13 @@ public class RegisterActivity extends AppCompatActivity {
         String className = editTextClass.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String ageStr = editTextAge.getText().toString().trim();
-        String dateOfBirth = editTextDateOfBirth.getText().toString().trim();
-        String email = editTextEmail.getText().toString().trim();
+        String department = editTextDepartment.getText().toString().trim();
+
         int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gender = selectedGenderButton.getText().toString();
 
-        if (name.isEmpty() || phone.isEmpty() || className.isEmpty() || password.isEmpty() || gender.isEmpty() || ageStr.isEmpty() || dateOfBirth.isEmpty() || email.isEmpty()) {
+        if (name.isEmpty() || phone.isEmpty() || className.isEmpty() || password.isEmpty() || gender.isEmpty() || ageStr.isEmpty() || department.isEmpty()) {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -91,8 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
         values.put("class", className);
         values.put("password", password);
         values.put("age", age);
-        values.put("date_of_birth", dateOfBirth);
-        values.put("email", email);
+        values.put("department", department);
 
         long newRowId = db.insert("users", null, values);
         if (newRowId == -1) {

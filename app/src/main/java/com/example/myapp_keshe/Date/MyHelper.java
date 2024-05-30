@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mydatabase.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // 增加数据库版本号
 
     public MyHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -22,9 +22,8 @@ public class MyHelper extends SQLiteOpenHelper {
                 "password TEXT, " +
                 "gender TEXT, " +
                 "age INTEGER, " +
-                "date_of_birth TEXT, " +
                 "phone TEXT, " +
-                "email TEXT" +
+                "department TEXT" + // 添加 department 列
                 ")");
 
         // 创建课程表
@@ -42,8 +41,8 @@ public class MyHelper extends SQLiteOpenHelper {
                 "student_id INTEGER, " +
                 "course_id INTEGER, " +
                 "grade TEXT, " +
-                "FOREIGN KEY(student_id) REFERENCES users(_id), " +
-                "FOREIGN KEY(course_id) REFERENCES courses(course_id)" +
+                "FOREIGN KEY(student_id) REFERENCES users(_id) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY(course_id) REFERENCES courses(course_id) ON DELETE CASCADE ON UPDATE CASCADE" +
                 ")");
     }
 
