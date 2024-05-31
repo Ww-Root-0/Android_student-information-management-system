@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, StudentActivity.class));
         } else if (id == R.id.btnCourse) {
             // 跳转到课程管理界面
-            startActivity(new Intent(this, CourseManagementActivity.class));
+            startActivity(new Intent(this, CourseActivity.class));
         } else if (id == R.id.btnScore) {
             // 跳转到成绩管理界面
             startActivity(new Intent(this, GradeManagementActivity.class));

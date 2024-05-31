@@ -9,13 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapp_keshe.Date.ContactAdapter;
+import com.example.myapp_keshe.Date.StudentAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 
@@ -244,7 +243,7 @@ public class StudentActivity extends AppCompatActivity {
             Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
         } else {
             // 使用自定义的ContactAdapter来显示数据
-            ContactAdapter adapter = new ContactAdapter(this, cursor);
+            StudentAdapter adapter = new StudentAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
         }
     }    // 清除输入框内容

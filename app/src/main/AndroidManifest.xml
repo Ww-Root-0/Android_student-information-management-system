@@ -23,7 +23,7 @@
 
         <activity android:name=".Control.ClassManagementActivity" />
         <activity android:name=".Control.SearchActivity" />
-        <activity android:name=".Control.CourseManagementActivity" />
+        <activity android:name=".Control.CourseActivity" />
         <activity android:name=".Control.GradeManagementActivity" />
         <activity android:name=".Control.GradeQueryActivity" />
         <activity android:name=".Control.HomeActivity" />

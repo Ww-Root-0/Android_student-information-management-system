@@ -11,9 +11,9 @@ import android.widget.TextView;
 import com.example.myapp_keshe.R;
 
 // 联系人适配器类，继承自CursorAdapter
-public class ContactAdapter extends CursorAdapter {
+public class StudentAdapter extends CursorAdapter {
     // 构造函数
-    public ContactAdapter(Context context, Cursor cursor) {
+    public StudentAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
 

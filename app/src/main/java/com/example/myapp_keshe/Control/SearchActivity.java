@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
     // 定义UI组件
     private EditText editTextId, editTextName;
     private Spinner spinnerClass, spinnerCourseName;
-    private Button buttonSearch,buttonBack;
+    private Button buttonSearch, buttonBack;
     private ListView listViewResults;
     private RadioGroup radioGroupQueryType;
     private MyHelper myHelper;
@@ -103,6 +103,32 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // 设置单选按钮组的选择变化监听器
+        radioGroupQueryType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radioStudent) {
+                    // 当选择学生时，使课程名称下拉框不可选择
+                    spinnerCourseName.setEnabled(false);
+                    spinnerClass.setEnabled(true);
+                    editTextId.setHint("学号");
+                    editTextName.setHint("姓名");
+                } else if (checkedId == R.id.radioCourse) {
+                    // 当选择课程时，使班级下拉框不可选择
+                    spinnerCourseName.setEnabled(true);
+                    spinnerClass.setEnabled(false);
+                    editTextId.setHint("课程代码");
+                    editTextName.setHint("授课老师");
+                } else {
+                    // 当选择成绩时，使课程名称和班级下拉框可选择
+                    spinnerCourseName.setEnabled(true);
+                    spinnerClass.setEnabled(true);
+                    editTextId.setHint("学号");
+                    editTextName.setHint("姓名");
+                }
+            }
+        });
     }
 
     // 填充下拉框内容
@@ -111,7 +137,8 @@ public class SearchActivity extends AppCompatActivity {
 
         // 填充班级下拉框
         List<String> classList = new ArrayList<>();
-        Cursor cursor = db.query("users", new String[]{"class"}, null, null, null, null, null);
+        classList.add(""); // 添加空选项
+        Cursor cursor = db.query("users", new String[]{"class"}, null, null, "class", null, null);
         while (cursor.moveToNext()) {
             classList.add(cursor.getString(cursor.getColumnIndexOrThrow("class")));
         }
@@ -121,7 +148,8 @@ public class SearchActivity extends AppCompatActivity {
 
         // 填充课程名称下拉框
         List<String> courseNameList = new ArrayList<>();
-        cursor = db.query("courses", new String[]{"course_name"}, null, null, null, null, null);
+        courseNameList.add(""); // 添加空选项
+        cursor = db.query("courses", new String[]{"course_name"}, null, null, "course_name", null, null);
         while (cursor.moveToNext()) {
             courseNameList.add(cursor.getString(cursor.getColumnIndexOrThrow("course_name")));
         }
@@ -151,20 +179,49 @@ public class SearchActivity extends AppCompatActivity {
 
         // 构建查询条件
         StringBuilder selection = new StringBuilder();
-        if (!id.isEmpty()) {
-            selection.append("_id = ").append(id);
-        }
-        if (!name.isEmpty()) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append("name LIKE '%").append(name).append("%'");
-        }
-        if (!className.isEmpty()) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append("class LIKE '%").append(className).append("%'");
-        }
-        if (!courseName.isEmpty()) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append("course_name LIKE '%").append(courseName).append("%'");
+        if (selectedId == R.id.radioStudent) {
+            if (!id.isEmpty()) {
+                selection.append("_id = ").append(id);
+            }
+            if (!name.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("name LIKE '%").append(name).append("%'");
+            }
+            if (!className.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("class LIKE '%").append(className).append("%'");
+            }
+            if (!courseName.isEmpty() && spinnerCourseName.isEnabled()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("course_name LIKE '%").append(courseName).append("%'");
+            }
+        } else if (selectedId == R.id.radioCourse) {
+            if (!id.isEmpty()) {
+                selection.append("course_code = '").append(id).append("'");
+            }
+            if (!name.isEmpty()) {
+                selection.append(" AND instructor LIKE '%").append(name).append("%'");
+            }
+            if (!courseName.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("course_name LIKE '%").append(courseName).append("%'");
+            }
+        } else if (selectedId == R.id.radioGrade) {
+            if (!id.isEmpty()) {
+                selection.append("student_id = ").append(id);
+            }
+            if (!name.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("name LIKE '%").append(name).append("%'");
+            }
+            if (!className.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("class LIKE '%").append(className).append("%'");
+            }
+            if (!courseName.isEmpty()) {
+                if (selection.length() > 0) selection.append(" AND ");
+                selection.append("course_name LIKE '%").append(courseName).append("%'");
+            }
         }
 
         // 执行查询
@@ -182,7 +239,7 @@ public class SearchActivity extends AppCompatActivity {
         } else if (selectedId == R.id.radioCourse) {
             cursor = db.query(
                     "courses",              // 表名
-                    new String[]{"course_id", "course_name", "course_code", "instructor", "credits"},  // 返回的列
+                    new String[]{"course_id AS _id", "course_name", "course_code", "instructor", "credits"},  // 返回的列
                     selection.toString(), // WHERE 子句
                     null,                // WHERE 子句中的占位符的值
                     null,                // GROUP BY 子句
@@ -192,7 +249,7 @@ public class SearchActivity extends AppCompatActivity {
         } else {
             cursor = db.query(
                     "grades",              // 表名
-                    new String[]{"grade_id", "student_id", "course_id", "grade"},  // 返回的列
+                    new String[]{"grade_id AS _id", "student_id", "course_id", "grade"},  // 返回的列
                     selection.toString(), // WHERE 子句
                     null,                // WHERE 子句中的占位符的值
                     null,                // GROUP BY 子句
@@ -206,17 +263,44 @@ public class SearchActivity extends AppCompatActivity {
             // 显示提示信息，告知用户没有找到符合条件的信息
             Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
         } else {
-            // 创建一个SimpleCursorAdapter来显示查询结果
-            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                    this,
-                    R.layout.listview, // 使用指定的简单列表项布局
-                    cursor,
-                    new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
-                    new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
-                    0
-            );
-            // 设置适配器到ListView
-            listViewResults.setAdapter(adapter);
+            // 使用不同的适配器来显示不同类型的查询结果
+            if (selectedId == R.id.radioStudent) {
+                // 创建一个SimpleCursorAdapter来显示学生查询结果
+                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                        this,
+                        R.layout.listview, // 使用指定的简单列表项布局
+                        cursor,
+                        new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
+                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
+                        0
+                );
+                // 设置适配器到ListView
+                listViewResults.setAdapter(adapter);
+            } else if (selectedId == R.id.radioCourse) {
+                // 创建一个SimpleCursorAdapter来显示课程查询结果
+                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                        this,
+                        R.layout.listview, // 使用指定的简单列表项布局
+                        cursor,
+                        new String[]{"course_name", "course_code", "instructor", "credits"}, // 显示课程名称、课程代码、授课教师、学分
+                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
+                        0
+                );
+                // 设置适配器到ListView
+                listViewResults.setAdapter(adapter);
+            } else {
+                // 创建一个SimpleCursorAdapter来显示成绩查询结果
+                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                        this,
+                        R.layout.listview, // 使用指定的简单列表项布局
+                        cursor,
+                        new String[]{"student_id", "course_id", "grade"}, // 显示学生ID、课程ID、成绩
+                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
+                        0
+                );
+                // 设置适配器到ListView
+                listViewResults.setAdapter(adapter);
+            }
         }
     }
 }

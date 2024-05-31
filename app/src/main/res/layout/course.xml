@@ -3,46 +3,169 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="0dp">
 
-    <!-- 输入课程信息的EditText -->
-    <EditText
-        android:id="@+id/etCourseName"
+    <!-- 导航栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:text="返回"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="课程管理"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="课程名称" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etCourseID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="课程编号" />
+        <!-- 课程名称输入框和标签 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/etCourseCredits"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="学分" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="课程名称" />
 
-    <!-- 添加按钮 -->
-    <Button
-        android:id="@+id/btnAddCourse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="添加课程" />
+            <EditText
+                android:id="@+id/editTextCourseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请输入课程名称" />
+        </LinearLayout>
 
-    <!-- 修改按钮 -->
-    <Button
-        android:id="@+id/btnUpdateCourse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="修改课程信息" />
+        <!-- 课程代码输入框和标签 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
-    <!-- 删除按钮 -->
-    <Button
-        android:id="@+id/btnDeleteCourse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="删除课程" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="课程代码" />
 
+            <EditText
+                android:id="@+id/editTextCourseCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请输入课程代码" />
+        </LinearLayout>
+
+        <!-- 授课教师输入框和标签 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="授课教师" />
+
+            <EditText
+                android:id="@+id/editTextInstructor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请输入授课教师" />
+        </LinearLayout>
+
+        <!-- 学分输入框和标签 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="学分" />
+
+            <EditText
+                android:id="@+id/editTextCredits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请输入学分" />
+        </LinearLayout>
+
+        <!-- 操作按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="添加" />
+
+            <Button
+                android:id="@+id/buttonUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="更新" />
+
+            <Button
+                android:id="@+id/buttonDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除" />
+        </LinearLayout>
+
+        <!-- 查询按钮 -->
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="查询" />
+
+        <!-- 结果列表 -->
+        <ListView
+            android:id="@+id/listViewResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>
