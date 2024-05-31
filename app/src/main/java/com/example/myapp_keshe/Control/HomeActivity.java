@@ -21,19 +21,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init() {
         // 初始化按钮并设置点击监听器
-        findViewById(R.id.btnQuery).setOnClickListener(this);
+        findViewById(R.id.btnSearch).setOnClickListener(this);
         findViewById(R.id.btnStudent).setOnClickListener(this);
         findViewById(R.id.btnCourse).setOnClickListener(this);
         findViewById(R.id.btnScore).setOnClickListener(this);
-        findViewById(R.id.btnClass).setOnClickListener(this);
         findViewById(R.id.btnExit).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+
+
         int id = v.getId();
 
-        if (id == R.id.btnQuery) {
+        if (id == R.id.btnSearch) {
             // 跳转到信息查询界面
             startActivity(new Intent(this, SearchActivity.class));
         } else if (id == R.id.btnStudent) {
@@ -44,10 +45,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, CourseActivity.class));
         } else if (id == R.id.btnScore) {
             // 跳转到成绩管理界面
-            startActivity(new Intent(this, GradeManagementActivity.class));
-        } else if (id == R.id.btnClass) {
-            // 跳转到班级管理界面
-            startActivity(new Intent(this, ClassManagementActivity.class));
+            startActivity(new Intent(this, ScoreActivity.class));
         } else if (id == R.id.btnExit) {
             // 退出系统
             finish();

@@ -37,7 +37,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 设置布局文件
-        setContentView(R.layout.query);
+        setContentView(R.layout.search);
 
         // 初始化数据库助手
         myHelper = new MyHelper(this);
@@ -268,7 +268,7 @@ public class SearchActivity extends AppCompatActivity {
                 // 创建一个SimpleCursorAdapter来显示学生查询结果
                 SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                         this,
-                        R.layout.listview, // 使用指定的简单列表项布局
+                        R.layout.searchlistview, // 使用指定的简单列表项布局
                         cursor,
                         new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
                         new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
@@ -280,7 +280,7 @@ public class SearchActivity extends AppCompatActivity {
                 // 创建一个SimpleCursorAdapter来显示课程查询结果
                 SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                         this,
-                        R.layout.listview, // 使用指定的简单列表项布局
+                        R.layout.searchlistview, // 使用指定的简单列表项布局
                         cursor,
                         new String[]{"course_name", "course_code", "instructor", "credits"}, // 显示课程名称、课程代码、授课教师、学分
                         new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
@@ -292,7 +292,7 @@ public class SearchActivity extends AppCompatActivity {
                 // 创建一个SimpleCursorAdapter来显示成绩查询结果
                 SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                         this,
-                        R.layout.listview, // 使用指定的简单列表项布局
+                        R.layout.searchlistview, // 使用指定的简单列表项布局
                         cursor,
                         new String[]{"student_id", "course_id", "grade"}, // 显示学生ID、课程ID、成绩
                         new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView

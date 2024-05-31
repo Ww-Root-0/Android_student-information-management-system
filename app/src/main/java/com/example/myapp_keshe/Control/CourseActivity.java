@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapp_keshe.Date.CourseAdapter;
+import com.example.myapp_keshe.Adapter.CourseAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 
@@ -225,7 +225,8 @@ public class CourseActivity extends AppCompatActivity {
             CourseAdapter adapter = new CourseAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
         }
-    }    // 清除输入框内容
+    }
+    // 清除输入框内容
     private void clearInputs() {
         editTextCourseName.setText("");
         editTextCourseCode.setText("");

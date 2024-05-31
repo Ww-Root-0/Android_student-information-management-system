@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapp_keshe.Date.StudentAdapter;
+import com.example.myapp_keshe.Adapter.StudentAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 

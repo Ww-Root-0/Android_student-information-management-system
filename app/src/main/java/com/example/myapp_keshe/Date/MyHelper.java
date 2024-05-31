@@ -40,7 +40,7 @@ public class MyHelper extends SQLiteOpenHelper {
                 "grade_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER, " +
                 "course_id INTEGER, " +
-                "grade TEXT, " +
+                "score TEXT, " +
                 "FOREIGN KEY(student_id) REFERENCES users(_id) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY(course_id) REFERENCES courses(course_id) ON DELETE CASCADE ON UPDATE CASCADE" +
                 ")");

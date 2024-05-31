@@ -21,15 +21,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Control.ClassManagementActivity" />
         <activity android:name=".Control.SearchActivity" />
         <activity android:name=".Control.CourseActivity" />
-        <activity android:name=".Control.GradeManagementActivity" />
-        <activity android:name=".Control.GradeQueryActivity" />
         <activity android:name=".Control.HomeActivity" />
         <activity android:name=".Control.RegisterActivity" />
-        <activity android:name=".Control.StubyidActivity" />
         <activity android:name=".Control.StudentActivity" />
+        <activity android:name=".Control.ScoreActivity" />
         <activity android:name=".Control.UserManagementActivity" />
     </application>
 
