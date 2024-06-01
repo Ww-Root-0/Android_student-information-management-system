@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapp_keshe.Adapter.ScoreAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
+import com.example.myapp_keshe.Pojo.Score;
 import com.example.myapp_keshe.R;
 
 import java.util.ArrayList;
@@ -174,133 +176,189 @@ public class SearchActivity extends AppCompatActivity {
             return; // 结束方法，不执行后续操作
         }
 
-        // 获取可读的数据库实例
-        SQLiteDatabase db = myHelper.getReadableDatabase();
-
-        // 构建查询条件
-        StringBuilder selection = new StringBuilder();
+        // 根据选择的查询类型执行相应的查询
         if (selectedId == R.id.radioStudent) {
-            if (!id.isEmpty()) {
-                selection.append("_id = ").append(id);
-            }
-            if (!name.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("name LIKE '%").append(name).append("%'");
-            }
-            if (!className.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("class LIKE '%").append(className).append("%'");
-            }
-            if (!courseName.isEmpty() && spinnerCourseName.isEnabled()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("course_name LIKE '%").append(courseName).append("%'");
-            }
+            searchStudents(id, name, className, courseName);
         } else if (selectedId == R.id.radioCourse) {
-            if (!id.isEmpty()) {
-                selection.append("course_code = '").append(id).append("'");
-            }
-            if (!name.isEmpty()) {
-                selection.append(" AND instructor LIKE '%").append(name).append("%'");
-            }
-            if (!courseName.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("course_name LIKE '%").append(courseName).append("%'");
-            }
+            searchCourses(id, name, className, courseName);
         } else if (selectedId == R.id.radioGrade) {
-            if (!id.isEmpty()) {
-                selection.append("student_id = ").append(id);
-            }
-            if (!name.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("name LIKE '%").append(name).append("%'");
-            }
-            if (!className.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("class LIKE '%").append(className).append("%'");
-            }
-            if (!courseName.isEmpty()) {
-                if (selection.length() > 0) selection.append(" AND ");
-                selection.append("course_name LIKE '%").append(courseName).append("%'");
-            }
-        }
-
-        // 执行查询
-        Cursor cursor;
-        if (selectedId == R.id.radioStudent) {
-            cursor = db.query(
-                    "users",              // 表名
-                    new String[]{"_id", "name", "gender", "phone", "class", "department", "age", "password"},  // 返回的列
-                    selection.toString(), // WHERE 子句
-                    null,                // WHERE 子句中的占位符的值
-                    null,                // GROUP BY 子句
-                    null,                // HAVING 子句
-                    null                 // ORDER BY 子句
-            );
-        } else if (selectedId == R.id.radioCourse) {
-            cursor = db.query(
-                    "courses",              // 表名
-                    new String[]{"course_id AS _id", "course_name", "course_code", "instructor", "credits"},  // 返回的列
-                    selection.toString(), // WHERE 子句
-                    null,                // WHERE 子句中的占位符的值
-                    null,                // GROUP BY 子句
-                    null,                // HAVING 子句
-                    null                 // ORDER BY 子句
-            );
-        } else {
-            cursor = db.query(
-                    "grades",              // 表名
-                    new String[]{"grade_id AS _id", "student_id", "course_id", "grade"},  // 返回的列
-                    selection.toString(), // WHERE 子句
-                    null,                // WHERE 子句中的占位符的值
-                    null,                // GROUP BY 子句
-                    null,                // HAVING 子句
-                    null                 // ORDER BY 子句
-            );
-        }
-
-        // 检查查询结果是否为空
-        if (cursor.getCount() == 0) {
-            // 显示提示信息，告知用户没有找到符合条件的信息
-            Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
-        } else {
-            // 使用不同的适配器来显示不同类型的查询结果
-            if (selectedId == R.id.radioStudent) {
-                // 创建一个SimpleCursorAdapter来显示学生查询结果
-                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                        this,
-                        R.layout.searchlistview, // 使用指定的简单列表项布局
-                        cursor,
-                        new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
-                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
-                        0
-                );
-                // 设置适配器到ListView
-                listViewResults.setAdapter(adapter);
-            } else if (selectedId == R.id.radioCourse) {
-                // 创建一个SimpleCursorAdapter来显示课程查询结果
-                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                        this,
-                        R.layout.searchlistview, // 使用指定的简单列表项布局
-                        cursor,
-                        new String[]{"course_name", "course_code", "instructor", "credits"}, // 显示课程名称、课程代码、授课教师、学分
-                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
-                        0
-                );
-                // 设置适配器到ListView
-                listViewResults.setAdapter(adapter);
-            } else {
-                // 创建一个SimpleCursorAdapter来显示成绩查询结果
-                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                        this,
-                        R.layout.searchlistview, // 使用指定的简单列表项布局
-                        cursor,
-                        new String[]{"student_id", "course_id", "grade"}, // 显示学生ID、课程ID、成绩
-                        new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
-                        0
-                );
-                // 设置适配器到ListView
-                listViewResults.setAdapter(adapter);
-            }
+            searchScores(id, name, className, courseName);
         }
     }
-}
+
+    // 查询学生信息的方法
+    // 查询学生信息的方法
+    private void searchStudents(String id, String name, String className, String courseName) {
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        StringBuilder selection = new StringBuilder();
+        List<String> selectionArgs = new ArrayList<>();
+
+        if (!id.isEmpty()) {
+            selection.append("_id = ?");
+            selectionArgs.add(id);
+        }
+        if (!name.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("name LIKE ?");
+            selectionArgs.add("%" + name + "%");
+        }
+        if (!className.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("class LIKE ?");
+            selectionArgs.add("%" + className + "%");
+        }
+
+        Cursor cursor = db.query(
+                "users", // 表名
+                new String[]{"_id", "name", "gender", "phone", "class", "department", "age", "password"}, // 返回的列
+                selection.toString(), // WHERE 子句
+                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
+                null, // GROUP BY 子句
+                null, // HAVING 子句
+                null // ORDER BY 子句
+        );
+
+        if (cursor.getCount() == 0) {
+            Toast.makeText(this, "没有找到符合条件的学生信息", Toast.LENGTH_SHORT).show();
+        } else {
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this,
+                    R.layout.searchlistview, // 使用指定的简单列表项布局
+                    cursor,
+                    new String[]{"name", "gender", "age", "phone"}, // 显示学生姓名、性别、年龄、电话
+                    new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
+                    0
+            );
+            listViewResults.setAdapter(adapter);
+        }
+    }
+
+    // 查询课程信息的方法
+    private void searchCourses(String id, String name, String className, String courseName) {
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        StringBuilder selection = new StringBuilder();
+        List<String> selectionArgs = new ArrayList<>();
+
+        if (!id.isEmpty()) {
+            selection.append("course_code = ?");
+            selectionArgs.add(id);
+        }
+        if (!name.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("instructor LIKE ?");
+            selectionArgs.add("%" + name + "%");
+        }
+        if (!courseName.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("course_name LIKE ?");
+            selectionArgs.add("%" + courseName + "%");
+        }
+
+        Cursor cursor = db.query(
+                "courses", // 表名
+                new String[]{"course_id AS _id", "course_name", "course_code", "instructor", "credits"}, // 返回的列
+                selection.toString(), // WHERE 子句
+                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
+                null, // GROUP BY 子句
+                null, // HAVING 子句
+                null // ORDER BY 子句
+        );
+
+        if (cursor.getCount() == 0) {
+            Toast.makeText(this, "没有找到符合条件的课程信息", Toast.LENGTH_SHORT).show();
+        } else {
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this,
+                    R.layout.searchlistview, // 使用指定的简单列表项布局
+                    cursor,
+                    new String[]{"course_name", "course_code", "instructor", "credits"}, // 显示课程名称、课程代码、授课教师、学分
+                    new int[]{R.id.textViewName, R.id.textViewGender, R.id.textViewAge, R.id.textViewPhone}, // 映射到布局中的TextView
+                    0
+            );
+            listViewResults.setAdapter(adapter);
+        }
+    }
+
+    // 查询成绩的方法
+// 查询成绩的方法
+    private void searchScores(String studentId, String studentName, String className, String courseName) {
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        StringBuilder selection = new StringBuilder();
+        List<String> selectionArgs = new ArrayList<>();
+
+        if (!studentId.isEmpty()) {
+            selection.append("student_id LIKE ?");
+            selectionArgs.add("%" + studentId + "%");
+        }
+        if (!studentName.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("student_id IN (SELECT _id FROM users WHERE name LIKE ?)");
+            selectionArgs.add("%" + studentName + "%");
+        }
+        if (!className.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("student_id IN (SELECT _id FROM users WHERE class LIKE ?)");
+            selectionArgs.add("%" + className + "%");
+        }
+        if (!courseName.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("course_id IN (SELECT course_id FROM courses WHERE course_name LIKE ?)");
+            selectionArgs.add("%" + courseName + "%");
+        }
+
+        Cursor cursor = db.query(
+                "grades", // 表名
+                new String[]{"grade_id AS _id", "student_id", "course_id", "score"}, // 返回的列
+                selection.toString(), // WHERE 子句
+                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
+                null, // GROUP BY 子句
+                null, // HAVING 子句
+                null // ORDER BY 子句
+        );
+
+        if (cursor.getCount() == 0) {
+            Toast.makeText(this, "没有找到符合条件的成绩", Toast.LENGTH_SHORT).show();
+        } else {
+            List<Score> scoreList = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                String score = cursor.getString(cursor.getColumnIndex("score"));
+                String studentIdFromCursor = cursor.getString(cursor.getColumnIndex("student_id"));
+                String courseIdFromCursor = cursor.getString(cursor.getColumnIndex("course_id"));
+
+                Cursor cursor1 = db.query(
+                        "users", // 表名
+                        new String[]{"name"}, // 返回的列
+                        "_id=?", // WHERE 子句
+                        new String[]{studentIdFromCursor}, // WHERE 子句中的占位符的值
+                        null, // GROUP BY 子句
+                        null, // HAVING 子句
+                        null // ORDER BY 子句
+                );
+                Cursor cursor2 = db.query(
+                        "courses", // 表名
+                        new String[]{"course_name"}, // 返回的列
+                        "course_id=?", // WHERE 子句
+                        new String[]{courseIdFromCursor}, // WHERE 子句中的占位符的值
+                        null, // GROUP BY 子句
+                        null, // HAVING 子句
+                        null // ORDER BY 子句
+                );
+
+                if (cursor1.moveToFirst() && cursor2.moveToFirst()) {
+                    String studentNameFromCursor = cursor1.getString(cursor1.getColumnIndex("name"));
+                    String courseNameFromCursor = cursor2.getString(cursor2.getColumnIndex("course_name"));
+                    scoreList.add(new Score(score, studentNameFromCursor, courseNameFromCursor));
+                }
+
+                cursor1.close();
+                cursor2.close();
+            }
+            cursor.close();
+
+            ScoreAdapter adapter = new ScoreAdapter(this, scoreList);
+            listViewResults.setAdapter(adapter);
+        }
+    }}
