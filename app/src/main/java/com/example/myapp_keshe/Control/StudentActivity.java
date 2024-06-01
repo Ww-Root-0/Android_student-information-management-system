@@ -24,8 +24,8 @@ import java.util.List;
 public class StudentActivity extends AppCompatActivity {
 
     // 定义UI组件
-    private EditText editTextName, editTextGender, editTextAge;
-    private Spinner spinnerClass;
+    private EditText editTextName, editTextAge, editTextPhone, editTextDepartment;
+    private Spinner spinnerGender, spinnerClass;
     private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch, buttonBack;
     private ListView listViewResults;
     private MyHelper myHelper;
@@ -49,8 +49,10 @@ public class StudentActivity extends AppCompatActivity {
     // 初始化UI组件和设置事件监听器
     private void init() {
         editTextName = findViewById(R.id.editTextName);
-        editTextGender = findViewById(R.id.editTextGender);
+        spinnerGender = findViewById(R.id.spinnerGender);
         editTextAge = findViewById(R.id.editTextAge);
+        editTextPhone = findViewById(R.id.editTextPhone);
+        editTextDepartment = findViewById(R.id.editTextDepartment);
         spinnerClass = findViewById(R.id.spinnerClass);
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonUpdate = findViewById(R.id.buttonUpdate);
@@ -109,11 +111,15 @@ public class StudentActivity extends AppCompatActivity {
                 String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
                 int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
                 String className = cursor.getString(cursor.getColumnIndexOrThrow("class"));
+                String phone = cursor.getString(cursor.getColumnIndexOrThrow("phone"));
+                String department = cursor.getString(cursor.getColumnIndexOrThrow("department"));
 
                 editTextName.setText(name);
-                editTextGender.setText(gender);
+                setSpinnerSelection(spinnerGender, gender);
                 editTextAge.setText(String.valueOf(age));
                 setSpinnerSelection(spinnerClass, className);
+                editTextPhone.setText(phone);
+                editTextDepartment.setText(department);
             }
         });
     }
@@ -131,14 +137,21 @@ public class StudentActivity extends AppCompatActivity {
         ArrayAdapter<String> classAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classList);
         classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerClass.setAdapter(classAdapter);
+
+        // 填充性别下拉框
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender_array, android.R.layout.simple_spinner_item);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(genderAdapter);
     }
 
     // 添加学生信息
     private void addStudent() {
         String name = editTextName.getText().toString().trim();
-        String gender = editTextGender.getText().toString().trim();
+        String gender = spinnerGender.getSelectedItem().toString();
         String ageStr = editTextAge.getText().toString().trim();
         String className = spinnerClass.getSelectedItem().toString();
+        String phone = editTextPhone.getText().toString().trim();
+        String department = editTextDepartment.getText().toString().trim();
 
         Integer age = null;
         if (!ageStr.isEmpty()) {
@@ -151,8 +164,8 @@ public class StudentActivity extends AppCompatActivity {
         }
 
         SQLiteDatabase db = myHelper.getWritableDatabase();
-        db.execSQL("INSERT INTO users (name, gender, age, class) VALUES (?, ?, ?, ?)",
-                new Object[]{name.isEmpty() ? null : name, gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className});
+        db.execSQL("INSERT INTO users (name, gender, age, class, phone, department) VALUES (?, ?, ?, ?, ?, ?)",
+                new Object[]{name.isEmpty() ? null : name, gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department});
         Toast.makeText(this, "学生信息添加成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
@@ -160,9 +173,11 @@ public class StudentActivity extends AppCompatActivity {
     // 更新学生信息
     private void updateStudent() {
         String name = editTextName.getText().toString().trim();
-        String gender = editTextGender.getText().toString().trim();
+        String gender = spinnerGender.getSelectedItem().toString();
         String ageStr = editTextAge.getText().toString().trim();
         String className = spinnerClass.getSelectedItem().toString();
+        String phone = editTextPhone.getText().toString().trim();
+        String department = editTextDepartment.getText().toString().trim();
 
         Integer age = null;
         if (!ageStr.isEmpty()) {
@@ -175,8 +190,8 @@ public class StudentActivity extends AppCompatActivity {
         }
 
         SQLiteDatabase db = myHelper.getWritableDatabase();
-        db.execSQL("UPDATE users SET gender = ?, age = ?, class = ? WHERE name = ?",
-                new Object[]{gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className, name.isEmpty() ? null : name});
+        db.execSQL("UPDATE users SET gender = ?, age = ?, class = ?, phone = ?, department = ? WHERE name = ?",
+                new Object[]{gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department, name.isEmpty() ? null : name});
         Toast.makeText(this, "学生信息更新成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
@@ -197,13 +212,13 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     // 查询学生信息
-// 查询学生信息
-// 查询学生信息
     private void searchStudents() {
         String name = editTextName.getText().toString().trim();
-        String gender = editTextGender.getText().toString().trim();
+        String gender = spinnerGender.getSelectedItem() != null ? spinnerGender.getSelectedItem().toString() : "";
         String ageStr = editTextAge.getText().toString().trim();
         String className = spinnerClass.getSelectedItem() != null ? spinnerClass.getSelectedItem().toString() : "";
+        String phone = editTextPhone.getText().toString().trim();
+        String department = editTextDepartment.getText().toString().trim();
 
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<>();
@@ -227,11 +242,21 @@ public class StudentActivity extends AppCompatActivity {
             selection.append("class = ?");
             selectionArgs.add(className);
         }
+        if (!phone.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("phone LIKE ?");
+            selectionArgs.add("%" + phone + "%");
+        }
+        if (!department.isEmpty()) {
+            if (selection.length() > 0) selection.append(" AND ");
+            selection.append("department LIKE ?");
+            selectionArgs.add("%" + department + "%");
+        }
 
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor cursor = db.query(
                 "users", // 表名
-                new String[]{"_id", "name", "gender", "age", "class"}, // 返回的列
+                new String[]{"_id", "name", "gender", "age", "class", "phone", "department"}, // 返回的列
                 selection.toString(), // WHERE 子句
                 selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
                 null, // GROUP BY 子句
@@ -242,16 +267,20 @@ public class StudentActivity extends AppCompatActivity {
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
         } else {
-            // 使用自定义的ContactAdapter来显示数据
+            // 使用自定义的StudentAdapter来显示数据
             StudentAdapter adapter = new StudentAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
         }
-    }    // 清除输入框内容
+    }
+
+    // 清除输入框内容
     private void clearInputs() {
         editTextName.setText("");
-        editTextGender.setText("");
+        spinnerGender.setSelection(0);
         editTextAge.setText("");
         spinnerClass.setSelection(0);
+        editTextPhone.setText("");
+        editTextDepartment.setText("");
     }
 
     // 设置Spinner的选中项

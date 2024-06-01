@@ -44,4 +44,20 @@
         android:text="Class"
         android:textSize="18sp"
         android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewDepartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Department"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
 </LinearLayout>

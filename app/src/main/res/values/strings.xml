@@ -13,4 +13,11 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_main">Main Menu</string>
+
+        <!-- 其他字符串资源 -->
+        <string name="prompt_select_gender">请选择性别</string>
+        <string-array name="gender_array">
+            <item>男</item>
+            <item>女</item>
+        </string-array>
 </resources>
