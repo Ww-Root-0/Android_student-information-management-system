@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -68,30 +67,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-        });
-
-        listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
-                String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
-                int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
-                String phone = cursor.getString(cursor.getColumnIndexOrThrow("phone"));
-                String className = cursor.getString(cursor.getColumnIndexOrThrow("class"));
-                String department = cursor.getString(cursor.getColumnIndexOrThrow("department"));
-
-                Intent intent = new Intent(SearchActivity.this, UserManagementActivity.class);
-                intent.putExtra("name", name);
-                intent.putExtra("password", password);
-                intent.putExtra("gender", gender);
-                intent.putExtra("age", age);
-                intent.putExtra("phone", phone);
-                intent.putExtra("class", className);
-                intent.putExtra("department", department);
-                startActivity(intent);
             }
         });
 
@@ -199,6 +174,30 @@ public class SearchActivity extends AppCompatActivity {
         } else {
             StudentAdapter adapter = new StudentAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
+
+            listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                    String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                    String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
+                    int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
+                    String phone = cursor.getString(cursor.getColumnIndexOrThrow("phone"));
+                    String className = cursor.getString(cursor.getColumnIndexOrThrow("class"));
+                    String department = cursor.getString(cursor.getColumnIndexOrThrow("department"));
+
+                    Intent intent = new Intent(SearchActivity.this, StudentDetailActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("password", password);
+                    intent.putExtra("gender", gender);
+                    intent.putExtra("age", age);
+                    intent.putExtra("phone", phone);
+                    intent.putExtra("class", className);
+                    intent.putExtra("department", department);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -238,6 +237,26 @@ public class SearchActivity extends AppCompatActivity {
         } else {
             CourseAdapter adapter = new CourseAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
+
+            listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    String courseId = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+                    String courseName = cursor.getString(cursor.getColumnIndexOrThrow("course_name"));
+                    String courseCode = cursor.getString(cursor.getColumnIndexOrThrow("course_code"));
+                    String instructor = cursor.getString(cursor.getColumnIndexOrThrow("instructor"));
+                    int credits = cursor.getInt(cursor.getColumnIndexOrThrow("credits"));
+
+                    Intent intent = new Intent(SearchActivity.this, CourseDetailActivity.class);
+                    intent.putExtra("courseId", courseId);
+                    intent.putExtra("courseName", courseName);
+                    intent.putExtra("courseCode", courseCode);
+                    intent.putExtra("instructor", instructor);
+                    intent.putExtra("credits", credits);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -318,6 +337,19 @@ public class SearchActivity extends AppCompatActivity {
 
             ScoreAdapter adapter = new ScoreAdapter(this, scoreList);
             listViewResults.setAdapter(adapter);
+
+            listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Score score = (Score) parent.getItemAtPosition(position);
+
+                    Intent intent = new Intent(SearchActivity.this, ScoreDetailActivity.class);
+                    intent.putExtra("studentName", score.getStudentName());
+                    intent.putExtra("courseName", score.getCourseName());
+                    intent.putExtra("score", score.getScore());
+                    startActivity(intent);
+                }
+            });
         }
     }
 }

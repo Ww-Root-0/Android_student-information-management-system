@@ -27,7 +27,9 @@
         <activity android:name=".Control.RegisterActivity" />
         <activity android:name=".Control.StudentActivity" />
         <activity android:name=".Control.ScoreActivity" />
-        <activity android:name=".Control.UserManagementActivity" />
+        <activity android:name=".Control.StudentDetailActivity" />
+        <activity android:name=".Control.CourseDetailActivity" />
+        <activity android:name=".Control.ScoreDetailActivity" />
     </application>
 
 </manifest>

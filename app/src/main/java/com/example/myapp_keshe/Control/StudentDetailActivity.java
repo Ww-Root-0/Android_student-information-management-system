@@ -15,7 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
 
-public class UserManagementActivity extends AppCompatActivity implements View.OnClickListener {
+public class StudentDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextName, editTextPassword, editTextGender, editTextAge,
             editTextPhone, editTextClass, editTextDepartment;
@@ -26,7 +26,7 @@ public class UserManagementActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user);
+        setContentView(R.layout.student_xx);
 
         Toolbar toolbar = findViewById(R.id.buttonBack);
         setSupportActionBar(toolbar);
