@@ -173,7 +173,7 @@ public class SearchActivity extends AppCompatActivity {
             Toast.makeText(this, "没有找到符合条件的学生信息", Toast.LENGTH_SHORT).show();
         } else {
             StudentAdapter adapter = new StudentAdapter(this, cursor);
-            listViewResults.setAdapter(adapter);
+            listViewResults.setAdapter(adapter);    
 
             listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
