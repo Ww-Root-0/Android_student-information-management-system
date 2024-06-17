@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.myapp_keshe.Adapter.CourseAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
@@ -26,6 +27,7 @@ public class CourseActivity extends AppCompatActivity {
     private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch, buttonBack;
     private ListView listViewResults;
     private MyHelper myHelper;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +52,15 @@ public class CourseActivity extends AppCompatActivity {
         buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonDelete = findViewById(R.id.buttonDelete);
         buttonSearch = findViewById(R.id.buttonSearch);
-        buttonBack = findViewById(R.id.buttonBack);
         listViewResults = findViewById(R.id.listViewResults);
+        toolbar=findViewById(R.id.toolbar);
 
-        // 设置返回按钮的点击事件监听器
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+        setSupportActionBar(toolbar);
+        // 显示返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // 设置返回按钮的点击事件
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         // 设置添加按钮的点击事件监听器
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,8 +176,6 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     // 查询课程信息
-// 查询课程信息
-// 查询课程信息
     private void searchCourses() {
         String courseName = editTextCourseName.getText().toString().trim();
         String courseCode = editTextCourseCode.getText().toString().trim();

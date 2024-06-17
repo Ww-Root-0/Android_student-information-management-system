@@ -11,9 +11,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.myapp_keshe.Adapter.StudentAdapter;
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.R;
@@ -26,9 +25,10 @@ public class StudentActivity extends AppCompatActivity {
     // 定义UI组件
     private EditText editTextName, editTextAge, editTextPhone, editTextDepartment;
     private Spinner spinnerGender, spinnerClass;
-    private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch, buttonBack;
+    private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch;
     private ListView listViewResults;
     private MyHelper myHelper;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,6 @@ public class StudentActivity extends AppCompatActivity {
 
         // 初始化UI组件
         init();
-
         // 填充下拉框内容
         populateSpinners();
     }
@@ -58,16 +57,17 @@ public class StudentActivity extends AppCompatActivity {
         buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonDelete = findViewById(R.id.buttonDelete);
         buttonSearch = findViewById(R.id.buttonSearch);
-        buttonBack = findViewById(R.id.buttonBack);
         listViewResults = findViewById(R.id.listViewResults);
+        toolbar=findViewById(R.id.toolbar);
 
-        // 设置返回按钮的点击事件监听器
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        setSupportActionBar(toolbar);
+        // 显示返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // 设置返回按钮的点击事件
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
 
         // 设置添加按钮的点击事件监听器
         buttonAdd.setOnClickListener(new View.OnClickListener() {

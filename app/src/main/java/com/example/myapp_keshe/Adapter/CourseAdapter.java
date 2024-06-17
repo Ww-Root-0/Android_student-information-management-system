@@ -42,11 +42,11 @@ public class CourseAdapter extends CursorAdapter {
         int credits = cursor.getInt(cursor.getColumnIndex("credits"));
 
         // 将数据添加标签
-        String labeledId = "ID: " + id;
-        String labeledName = "Name: " + name;
-        String labeledCode = "Code: " + code;
-        String labeledInstructor = "Instructor: " + instructor;
-        String labeledCredits = "Credits: " + credits;
+        String labeledId = "课程ID: " + id;
+        String labeledName = "课程名: " + name;
+        String labeledCode = "课程代码: " + code;
+        String labeledInstructor = "授课老师: " + instructor;
+        String labeledCredits = "学分: " + credits;
 
         // 在对应的文本视图中设置数据
         idTextView.setText(labeledId);

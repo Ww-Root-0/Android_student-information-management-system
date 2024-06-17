@@ -3,36 +3,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="@color/background_color">
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="信息查询" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/title" />
 
-    <Button
-        android:id="@+id/btnStudent"
-        android:layout_width="wrap_content"
+    <!-- 包裹所有Button的LinearLayout -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="学生管理" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="16dp"> <!-- 增加顶部间距 -->
 
-    <Button
-        android:id="@+id/btnCourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="课程管理" />
+        <!-- 第一行Button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"> <!-- 增加行间距 -->
 
-    <Button
-        android:id="@+id/btnScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="成绩管理" />
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="信息查询"
+                android:padding="16dp"
+                android:minWidth="150dp"
+                android:minHeight="100dp"
+                android:layout_marginEnd="50dp"/>
 
-    <Button
-        android:id="@+id/btnExit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="退出系统" />
+            <Button
+                android:id="@+id/btnStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="学生管理"
+                android:padding="16dp"
+                android:minWidth="150dp"
+                android:minHeight="100dp"/>
+        </LinearLayout>
+
+        <!-- 第二行Button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"> <!-- 增加行间距 -->
+
+            <Button
+                android:id="@+id/btnCourse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:minWidth="150dp"
+                android:minHeight="100dp"
+                android:padding="16dp"
+                android:text="课程管理" />
+
+            <Button
+                android:id="@+id/btnScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="150dp"
+                android:minHeight="100dp"
+                android:padding="16dp"
+                android:text="成绩管理" />
+        </LinearLayout>
+
+        <!-- 最后一个单独的Button -->
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="退出系统"
+            android:padding="16dp"
+            android:minWidth="300dp"
+            android:minHeight="100dp"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -20,19 +20,13 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
     private EditText editTextCourseId, editTextCourseName, editTextCourseCode, editTextInstructor, editTextCredits;
     private Button buttonUpdate, buttonOK;
     private MyHelper myHelper;
+    private Toolbar toolbar;
     private String originalCourseId; // 用于存储原始课程ID，作为更新的条件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.course_xx);
-
-        Toolbar toolbar = findViewById(R.id.buttonBack);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_background); // 设置箭头图标
-        }
 
         myHelper = new MyHelper(this);
 
@@ -43,6 +37,14 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
         editTextCredits = findViewById(R.id.editTextCredits);
         buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonOK = findViewById(R.id.buttonOK);
+        toolbar=findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        // 显示返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // 设置返回按钮的点击事件
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // 设置按钮点击事件监听器
         buttonUpdate.setOnClickListener(this);

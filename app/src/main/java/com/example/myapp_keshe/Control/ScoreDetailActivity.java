@@ -21,19 +21,22 @@ public class ScoreDetailActivity extends AppCompatActivity implements View.OnCli
     private EditText editTextStudentName, editTextCourseName, editTextScore;
     private Button buttonUpdate, buttonOK;
     private MyHelper myHelper;
+    private Toolbar toolbar;
     private String originalStudentId, originalCourseId; // 用于存储原始学生ID和课程ID，作为更新的条件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.score_xx);
+        toolbar=findViewById(R.id.toolbar);
 
-        Toolbar toolbar = findViewById(R.id.buttonBack);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_background); // 设置箭头图标
-        }
+        // 显示返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // 设置返回按钮的点击事件
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
 
         myHelper = new MyHelper(this);
 

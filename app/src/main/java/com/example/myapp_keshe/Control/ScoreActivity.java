@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.myapp_keshe.Date.MyHelper;
 import com.example.myapp_keshe.Adapter.ScoreAdapter;
@@ -26,6 +27,7 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
     private EditText editTextStuId, editTextStuName, editTextCourseId, editTextCourseName, editTextScore;
     private ListView listViewResults;
     private MyHelper myHelper;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,15 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         editTextCourseId = findViewById(R.id.editTextCourseId);
         editTextCourseName = findViewById(R.id.editTextCourseName);
         editTextScore = findViewById(R.id.editTextScore);
+        toolbar=findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        // 显示返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // 设置返回按钮的点击事件
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         findViewById(R.id.buttonAdd).setOnClickListener(this);
         findViewById(R.id.buttonUpdate).setOnClickListener(this);
@@ -60,13 +71,6 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 editTextStuId.setText(student_id);
                 editTextCourseId.setText(course_id);
                 editTextScore.setText(score);
-            }
-        });
-
-        findViewById(R.id.buttonBack).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
     }
