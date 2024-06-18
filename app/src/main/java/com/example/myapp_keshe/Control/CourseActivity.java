@@ -24,7 +24,7 @@ public class CourseActivity extends AppCompatActivity {
 
     // 定义UI组件
     private EditText editTextCourseName, editTextCourseCode, editTextInstructor, editTextCredits;
-    private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch, buttonBack;
+    private Button buttonAdd, buttonUpdate, buttonDelete, buttonSearch;
     private ListView listViewResults;
     private MyHelper myHelper;
     private Toolbar toolbar;
@@ -98,7 +98,6 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String courseId = cursor.getString(cursor.getColumnIndexOrThrow("course_id"));
                 String courseName = cursor.getString(cursor.getColumnIndexOrThrow("course_name"));
                 String courseCode = cursor.getString(cursor.getColumnIndexOrThrow("course_code"));
                 String instructor = cursor.getString(cursor.getColumnIndexOrThrow("instructor"));

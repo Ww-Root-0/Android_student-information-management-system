@@ -21,27 +21,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- 学号输入框和标签 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:text="学号" />
-
-            <EditText
-                android:id="@+id/editTextStuId"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="请输入学号" />
-        </LinearLayout>
-
         <!-- 姓名输入框和标签 -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,27 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="请输入姓名" />
-        </LinearLayout>
-
-        <!-- 课程代号输入框和标签 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:text="课程代号" />
-
-            <EditText
-                android:id="@+id/editTextCourseId"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="请输入课程代号" />
         </LinearLayout>
 
         <!-- 课程名称输入框和标签 -->
@@ -160,8 +118,6 @@
                 android:layout_height="wrap_content"
                 android:text="查询" />
         </LinearLayout>
-
-
 
         <!-- 结果列表 -->
         <ListView

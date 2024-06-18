@@ -24,7 +24,7 @@ import java.util.List;
 public class ScoreActivity extends AppCompatActivity implements View.OnClickListener {
 
     // 定义UI组件
-    private EditText editTextStuId, editTextStuName, editTextCourseId, editTextCourseName, editTextScore;
+    private EditText editTextStuName,editTextCourseName, editTextScore;
     private ListView listViewResults;
     private MyHelper myHelper;
     private Toolbar toolbar;
@@ -38,9 +38,7 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        editTextStuId = findViewById(R.id.editTextStuId);
         editTextStuName = findViewById(R.id.editTextStuName);
-        editTextCourseId = findViewById(R.id.editTextCourseId);
         editTextCourseName = findViewById(R.id.editTextCourseName);
         editTextScore = findViewById(R.id.editTextScore);
         toolbar=findViewById(R.id.toolbar);
@@ -62,15 +60,17 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String grade_id = cursor.getString(cursor.getColumnIndexOrThrow("grade_id"));
-                String student_id = cursor.getString(cursor.getColumnIndexOrThrow("student_id"));
-                String course_id = cursor.getString(cursor.getColumnIndexOrThrow("course_id"));
-                String score = cursor.getString(cursor.getColumnIndexOrThrow("score"));
+                Score selectedScore = (Score) parent.getItemAtPosition(position);
+                if (selectedScore != null) {
+                    String score = selectedScore.getScore();
+                    String studentName = selectedScore.getStudentName();
+                    String courseName = selectedScore.getCourseName();
 
-                editTextStuId.setText(student_id);
-                editTextCourseId.setText(course_id);
-                editTextScore.setText(score);
+                    // 你可以在这里处理选中的Score对象，例如更新UI
+                    editTextScore.setText(score);
+                    editTextStuName.setText(studentName);
+                    editTextCourseName.setText(courseName);
+                }
             }
         });
     }
@@ -90,16 +90,44 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void addScore() {
-        String studentId = editTextStuId.getText().toString().trim();
-        String courseId = editTextCourseId.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString().trim();
+        String courseName = editTextCourseName.getText().toString().trim();
         String score = editTextScore.getText().toString().trim();
 
-        if (studentId.isEmpty() || courseId.isEmpty() || score.isEmpty()) {
+        if (studentName.isEmpty() || courseName.isEmpty() || score.isEmpty()) {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SQLiteDatabase db = myHelper.getWritableDatabase();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        // 根据姓名查询学生ID
+        Cursor studentCursor = db.query("users", new String[]{"_id"}, "name=?", new String[]{studentName}, null, null, null);
+        int studentId = -1;
+        if (studentCursor.moveToFirst()) {
+            studentId = studentCursor.getInt(studentCursor.getColumnIndex("_id"));
+        }
+        studentCursor.close();
+
+        if (studentId == -1) {
+            Toast.makeText(this, "未找到该学生", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 根据课程名称查询课程ID
+        Cursor courseCursor = db.query("courses", new String[]{"course_id"}, "course_name=?", new String[]{courseName}, null, null, null);
+        int courseId = -1;
+        if (courseCursor.moveToFirst()) {
+            courseId = courseCursor.getInt(courseCursor.getColumnIndex("course_id"));
+        }
+        courseCursor.close();
+
+        if (courseId == -1) {
+            Toast.makeText(this, "未找到该课程", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 插入成绩
         ContentValues values = new ContentValues();
         values.put("student_id", studentId);
         values.put("course_id", courseId);
@@ -113,53 +141,106 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "添加失败", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void updateScore() {
-        String studentId = editTextStuId.getText().toString().trim();
-        String courseId = editTextCourseId.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString().trim();
+        String courseName = editTextCourseName.getText().toString().trim();
         String score = editTextScore.getText().toString().trim();
 
-        if (studentId.isEmpty() || courseId.isEmpty() || score.isEmpty()) {
+        if (studentName.isEmpty() || courseName.isEmpty() || score.isEmpty()) {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SQLiteDatabase db = myHelper.getWritableDatabase();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        // 根据姓名查询学生ID
+        Cursor studentCursor = db.query("users", new String[]{"_id"}, "name=?", new String[]{studentName}, null, null, null);
+        int studentId = -1;
+        if (studentCursor.moveToFirst()) {
+            studentId = studentCursor.getInt(studentCursor.getColumnIndex("_id"));
+        }
+        studentCursor.close();
+
+        if (studentId == -1) {
+            Toast.makeText(this, "未找到该学生", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 根据课程名称查询课程ID
+        Cursor courseCursor = db.query("courses", new String[]{"course_id"}, "course_name=?", new String[]{courseName}, null, null, null);
+        int courseId = -1;
+        if (courseCursor.moveToFirst()) {
+            courseId = courseCursor.getInt(courseCursor.getColumnIndex("course_id"));
+        }
+        courseCursor.close();
+
+        if (courseId == -1) {
+            Toast.makeText(this, "未找到该课程", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 更新成绩
+        SQLiteDatabase writableDb = myHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("score", score);
 
-        int rowsAffected = db.update("grades", values, "student_id=? AND course_id=?", new String[]{studentId, courseId});
+        int rowsAffected = writableDb.update("grades", values, "student_id=? AND course_id=?", new String[]{String.valueOf(studentId), String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
             clearInputs();
         } else {
-            Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "更新失败，可能是因为找不到记录", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void deleteScore() {
-        String studentId = editTextStuId.getText().toString().trim();
-        String courseId = editTextCourseId.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString().trim();
+        String courseName = editTextCourseName.getText().toString().trim();
 
-        if (studentId.isEmpty() || courseId.isEmpty()) {
-            Toast.makeText(this, "请填写学号和课程代号", Toast.LENGTH_SHORT).show();
+        if (studentName.isEmpty() || courseName.isEmpty()) {
+            Toast.makeText(this, "请填写学生姓名和课程名称", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SQLiteDatabase db = myHelper.getWritableDatabase();
-        int rowsAffected = db.delete("grades", "student_id=? AND course_id=?", new String[]{studentId, courseId});
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+
+        // 根据姓名查询学生ID
+        Cursor studentCursor = db.query("users", new String[]{"_id"}, "name=?", new String[]{studentName}, null, null, null);
+        int studentId = -1;
+        if (studentCursor.moveToFirst()) {
+            studentId = studentCursor.getInt(studentCursor.getColumnIndex("_id"));
+        }
+        studentCursor.close();
+
+        if (studentId == -1) {
+            Toast.makeText(this, "未找到该学生", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 根据课程名称查询课程ID
+        Cursor courseCursor = db.query("courses", new String[]{"course_id"}, "course_name=?", new String[]{courseName}, null, null, null);
+        int courseId = -1;
+        if (courseCursor.moveToFirst()) {
+            courseId = courseCursor.getInt(courseCursor.getColumnIndex("course_id"));
+        }
+        courseCursor.close();
+
+        if (courseId == -1) {
+            Toast.makeText(this, "未找到该课程", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 删除成绩
+        SQLiteDatabase writableDb = myHelper.getWritableDatabase();
+        int rowsAffected = writableDb.delete("grades", "student_id=? AND course_id=?", new String[]{String.valueOf(studentId), String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
             clearInputs();
         } else {
-            Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "删除失败，可能是因为找不到记录", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void searchScores() {
-        String studentId = editTextStuId.getText().toString().trim();
         String studentName = editTextStuName.getText().toString().trim();
-        String courseId = editTextCourseId.getText().toString().trim();
         String courseName = editTextCourseName.getText().toString().trim();
 
         SQLiteDatabase db = myHelper.getReadableDatabase();
@@ -167,19 +248,9 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<>();
 
-        if (!studentId.isEmpty()) {
-            selection.append("student_id LIKE ?");
-            selectionArgs.add("%" + studentId + "%");
-        }
         if (!studentName.isEmpty()) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append("student_id IN (SELECT student_id FROM users WHERE name LIKE ?)");
+            selection.append("student_id IN (SELECT _id FROM users WHERE name LIKE ?)");
             selectionArgs.add("%" + studentName + "%");
-        }
-        if (!courseId.isEmpty()) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append("course_id LIKE ?");
-            selectionArgs.add("%" + courseId + "%");
         }
         if (!courseName.isEmpty()) {
             if (selection.length() > 0) selection.append(" AND ");
@@ -239,11 +310,10 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
             ScoreAdapter adapter = new ScoreAdapter(this, scoreList);
             listViewResults.setAdapter(adapter);
         }
-    }    // 清除输入框内容
+    }
+    // 清除输入框内容
     private void clearInputs() {
-        editTextStuId.setText("");
         editTextStuName.setText("");
-        editTextCourseId.setText("");
         editTextCourseName.setText("");
         editTextScore.setText("");
     }
