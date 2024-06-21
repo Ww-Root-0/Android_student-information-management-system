@@ -49,8 +49,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (v.getId() == R.id.loginbutton) {
             // 获取用户输入的用户名和密码
-            username = editTextuserName.getText().toString().trim();
-            password = editTextPassword.getText().toString().trim();
+            username = editTextuserName.getText().toString();
+            password = editTextPassword.getText().toString();
             // 检查是否输入了用户名和密码
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();

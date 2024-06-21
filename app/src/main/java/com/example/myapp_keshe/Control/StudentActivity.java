@@ -33,19 +33,13 @@ public class StudentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 设置布局文件
         setContentView(R.layout.student);
-
-        // 初始化数据库助手
         myHelper = new MyHelper(this);
-
-        // 初始化UI组件
         init();
-        // 填充下拉框内容
         populateSpinners();
     }
 
-    // 初始化UI组件和设置事件监听器
+    // 初始化
     private void init() {
         editTextName = findViewById(R.id.editTextName);
         spinnerGender = findViewById(R.id.spinnerGender);
@@ -59,41 +53,34 @@ public class StudentActivity extends AppCompatActivity {
         buttonSearch = findViewById(R.id.buttonSearch);
         listViewResults = findViewById(R.id.listViewResults);
         toolbar=findViewById(R.id.toolbar);
-
+        //返回
         setSupportActionBar(toolbar);
-        // 显示返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-
-        // 设置添加按钮的点击事件监听器
+        // 添加按事件监听器
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addStudent();
             }
         });
-
-        // 设置更新按钮的点击事件监听器
+        // 修改事件监听器
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateStudent();
             }
         });
-
-        // 设置删除按钮的点击事件监听器
+        // 删除事件监听器
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteStudent();
             }
         });
-
-        // 设置查询按钮的点击事件监听器
+        // 查询事件监听器
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +93,7 @@ public class StudentActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String studentId = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
                 int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
@@ -124,13 +111,20 @@ public class StudentActivity extends AppCompatActivity {
         });
     }
 
-    // 填充下拉框内容
+    // 下拉框内容
     private void populateSpinners() {
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
         // 填充班级下拉框
         List<String> classList = new ArrayList<>();
-        Cursor cursor = db.query("users", new String[]{"class"}, null, null, "class", null, null);
+        Cursor cursor = db.query(
+                "users",
+                new String[]{"class"},
+                null,
+                null,
+                "class",
+                null,
+                null);
         while (cursor.moveToNext()) {
             classList.add(cursor.getString(cursor.getColumnIndexOrThrow("class")));
         }
@@ -146,26 +140,17 @@ public class StudentActivity extends AppCompatActivity {
 
     // 添加学生信息
     private void addStudent() {
-        String name = editTextName.getText().toString().trim();
+        String name = editTextName.getText().toString();
         String gender = spinnerGender.getSelectedItem().toString();
-        String ageStr = editTextAge.getText().toString().trim();
+        String ageStr = editTextAge.getText().toString();
         String className = spinnerClass.getSelectedItem().toString();
-        String phone = editTextPhone.getText().toString().trim();
-        String department = editTextDepartment.getText().toString().trim();
+        String phone = editTextPhone.getText().toString();
+        String department = editTextDepartment.getText().toString();
 
-        Integer age = null;
-        if (!ageStr.isEmpty()) {
-            try {
-                age = Integer.parseInt(ageStr);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "年龄必须是一个有效的数字", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
 
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("INSERT INTO users (name, gender, age, class, phone, department) VALUES (?, ?, ?, ?, ?, ?)",
-                new Object[]{name.isEmpty() ? null : name, gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department});
+                new Object[]{name.isEmpty() ? null : name, gender.isEmpty() ? null : gender, ageStr, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department});
         Toast.makeText(this, "学生信息添加成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
@@ -179,19 +164,15 @@ public class StudentActivity extends AppCompatActivity {
         String phone = editTextPhone.getText().toString().trim();
         String department = editTextDepartment.getText().toString().trim();
 
-        Integer age = null;
-        if (!ageStr.isEmpty()) {
-            try {
-                age = Integer.parseInt(ageStr);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "年龄必须是一个有效的数字", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("UPDATE users SET gender = ?, age = ?, class = ?, phone = ?, department = ? WHERE name = ?",
-                new Object[]{gender.isEmpty() ? null : gender, age, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department, name.isEmpty() ? null : name});
+                new Object[]{gender.isEmpty() ? null : gender,
+                        ageStr,
+                        className.isEmpty() ? null : className,
+                        phone.isEmpty() ? null : phone,
+                        department.isEmpty() ? null : department,
+                        name.isEmpty() ? null : name});
+        searchStudents();
         Toast.makeText(this, "学生信息更新成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
@@ -213,12 +194,12 @@ public class StudentActivity extends AppCompatActivity {
 
     // 查询学生信息
     private void searchStudents() {
-        String name = editTextName.getText().toString().trim();
+        String name = editTextName.getText().toString();
         String gender = spinnerGender.getSelectedItem() != null ? spinnerGender.getSelectedItem().toString() : "";
-        String ageStr = editTextAge.getText().toString().trim();
+        String ageStr = editTextAge.getText().toString();
         String className = spinnerClass.getSelectedItem() != null ? spinnerClass.getSelectedItem().toString() : "";
-        String phone = editTextPhone.getText().toString().trim();
-        String department = editTextDepartment.getText().toString().trim();
+        String phone = editTextPhone.getText().toString();
+        String department = editTextDepartment.getText().toString();
 
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<>();
@@ -255,13 +236,13 @@ public class StudentActivity extends AppCompatActivity {
 
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor cursor = db.query(
-                "users", // 表名
-                new String[]{"_id", "name", "gender", "age", "class", "phone", "department"}, // 返回的列
+                "users",
+                new String[]{"_id", "name", "gender", "age", "class", "phone", "department"},
                 selection.toString(), // WHERE 子句
-                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
-                null, // GROUP BY 子句
-                null, // HAVING 子句
-                null // ORDER BY 子句
+                selectionArgs.toArray(new String[0]),
+                null,
+                null,
+                null
         );
 
         if (cursor.getCount() == 0) {
@@ -272,7 +253,6 @@ public class StudentActivity extends AppCompatActivity {
             listViewResults.setAdapter(adapter);
         }
     }
-
     // 清除输入框内容
     private void clearInputs() {
         editTextName.setText("");

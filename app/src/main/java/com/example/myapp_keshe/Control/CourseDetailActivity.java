@@ -39,11 +39,10 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
         buttonOK = findViewById(R.id.buttonOK);
         toolbar=findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
         // 显示返回按钮
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // 设置按钮点击事件监听器
@@ -52,7 +51,6 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
 
         // 获取传递的数据
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
             String courseId = extras.getString("courseId");
             originalCourseId = courseId; // 存储原始课程ID
             String courseName = extras.getString("courseName");
@@ -66,7 +64,6 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
             editTextCourseCode.setText(courseCode);
             editTextInstructor.setText(instructor);
             editTextCredits.setText(String.valueOf(credits));
-        }
     }
 
     @Override
@@ -93,10 +90,8 @@ public class CourseDetailActivity extends AppCompatActivity implements View.OnCl
 
             // 执行更新操作
             updateCourseData(originalCourseId, newCourseId, newCourseName, newCourseCode, newInstructor, newCredits);
-
             // 将EditText设置为不可编辑状态
             setEditTextsEnabled(false);
-
             // 提示用户修改成功
             Toast.makeText(this, "课程信息修改成功", Toast.LENGTH_SHORT).show();
         }

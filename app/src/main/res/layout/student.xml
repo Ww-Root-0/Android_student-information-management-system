@@ -150,8 +150,7 @@
                 android:id="@+id/spinnerClass"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:prompt="@string/prompt_select_class" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <!-- 操作按钮 -->

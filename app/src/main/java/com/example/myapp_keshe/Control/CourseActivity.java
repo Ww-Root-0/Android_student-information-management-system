@@ -32,17 +32,12 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 设置布局文件
         setContentView(R.layout.course);
-
-        // 初始化数据库助手
         myHelper = new MyHelper(this);
-
-        // 初始化UI组件
         init();
     }
 
-    // 初始化UI组件和设置事件监听器
+    // 初始化
     private void init() {
         editTextCourseName = findViewById(R.id.editTextCourseName);
         editTextCourseCode = findViewById(R.id.editTextCourseCode);
@@ -54,22 +49,20 @@ public class CourseActivity extends AppCompatActivity {
         buttonSearch = findViewById(R.id.buttonSearch);
         listViewResults = findViewById(R.id.listViewResults);
         toolbar=findViewById(R.id.toolbar);
-
+        //返回
         setSupportActionBar(toolbar);
-        // 显示返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        // 设置添加按钮的点击事件监听器
+
+        // 设置添加事件监听器
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addCourse();
             }
         });
-
-        // 设置更新按钮的点击事件监听器
+        // 设置更新事件监听器
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +70,7 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
-        // 设置删除按钮的点击事件监听器
+        // 设置删除事件监听器
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +78,7 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
-        // 设置查询按钮的点击事件监听器
+        // 设置查询事件监听器
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,48 +106,32 @@ public class CourseActivity extends AppCompatActivity {
 
     // 添加课程信息
     private void addCourse() {
-        String courseName = editTextCourseName.getText().toString().trim();
-        String courseCode = editTextCourseCode.getText().toString().trim();
-        String instructor = editTextInstructor.getText().toString().trim();
-        String creditsStr = editTextCredits.getText().toString().trim();
-
-        Integer credits = null;
-        if (!creditsStr.isEmpty()) {
-            try {
-                credits = Integer.parseInt(creditsStr);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "学分必须是一个有效的数字", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+        String courseName = editTextCourseName.getText().toString();
+        String courseCode = editTextCourseCode.getText().toString();
+        String instructor = editTextInstructor.getText().toString();
+        String creditsStr = editTextCredits.getText().toString();
 
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("INSERT INTO courses (course_name, course_code, instructor, credits) VALUES (?, ?, ?, ?)",
-                new Object[]{courseName.isEmpty() ? null : courseName, courseCode.isEmpty() ? null : courseCode, instructor.isEmpty() ? null : instructor, credits});
+                new Object[]{courseName.isEmpty() ? null : courseName,
+                        courseCode.isEmpty() ? null : courseCode,
+                        instructor.isEmpty() ? null : instructor,
+                        creditsStr});
         Toast.makeText(this, "课程信息添加成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
 
     // 更新课程信息
     private void updateCourse() {
-        String courseName = editTextCourseName.getText().toString().trim();
-        String courseCode = editTextCourseCode.getText().toString().trim();
-        String instructor = editTextInstructor.getText().toString().trim();
-        String creditsStr = editTextCredits.getText().toString().trim();
+        String courseName = editTextCourseName.getText().toString();
+        String courseCode = editTextCourseCode.getText().toString();
+        String instructor = editTextInstructor.getText().toString();
+        String creditsStr = editTextCredits.getText().toString();
 
-        Integer credits = null;
-        if (!creditsStr.isEmpty()) {
-            try {
-                credits = Integer.parseInt(creditsStr);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "学分必须是一个有效的数字", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
 
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("UPDATE courses SET course_code = ?, instructor = ?, credits = ? WHERE course_name = ?",
-                new Object[]{courseCode.isEmpty() ? null : courseCode, instructor.isEmpty() ? null : instructor, credits, courseName.isEmpty() ? null : courseName});
+                new Object[]{courseCode.isEmpty() ? null : courseCode, instructor.isEmpty() ? null : instructor, creditsStr, courseName.isEmpty() ? null : courseName});
         Toast.makeText(this, "课程信息更新成功", Toast.LENGTH_SHORT).show();
         clearInputs();
     }
@@ -176,10 +153,10 @@ public class CourseActivity extends AppCompatActivity {
 
     // 查询课程信息
     private void searchCourses() {
-        String courseName = editTextCourseName.getText().toString().trim();
-        String courseCode = editTextCourseCode.getText().toString().trim();
-        String instructor = editTextInstructor.getText().toString().trim();
-        String creditsStr = editTextCredits.getText().toString().trim();
+        String courseName = editTextCourseName.getText().toString();
+        String courseCode = editTextCourseCode.getText().toString();
+        String instructor = editTextInstructor.getText().toString();
+        String creditsStr = editTextCredits.getText().toString();
 
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<>();
@@ -207,18 +184,18 @@ public class CourseActivity extends AppCompatActivity {
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor cursor = db.query(
                 "courses", // 表名
-                new String[]{"course_id AS _id", "course_name", "course_code", "instructor", "credits"}, // 返回的列
+                new String[]{"course_id AS _id", "course_name", "course_code", "instructor", "credits"},
                 selection.toString(), // WHERE 子句
-                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
-                null, // GROUP BY 子句
-                null, // HAVING 子句
-                null // ORDER BY 子句
+                selectionArgs.toArray(new String[0]),
+                null,
+                null,
+                null
         );
 
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
         } else {
-            // 使用自定义的CourseAdapter来显示数据
+            // 自定义的CourseAdapter来显示数据
             CourseAdapter adapter = new CourseAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
         }

@@ -42,13 +42,11 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         editTextCourseName = findViewById(R.id.editTextCourseName);
         editTextScore = findViewById(R.id.editTextScore);
         toolbar=findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
+        listViewResults = findViewById(R.id.listViewResults);
         // 显示返回按钮
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         findViewById(R.id.buttonAdd).setOnClickListener(this);
@@ -56,12 +54,10 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.buttonDelete).setOnClickListener(this);
         findViewById(R.id.buttonSearch).setOnClickListener(this);
 
-        listViewResults = findViewById(R.id.listViewResults);
         listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Score selectedScore = (Score) parent.getItemAtPosition(position);
-                if (selectedScore != null) {
                     String score = selectedScore.getScore();
                     String studentName = selectedScore.getStudentName();
                     String courseName = selectedScore.getCourseName();
@@ -70,7 +66,6 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                     editTextScore.setText(score);
                     editTextStuName.setText(studentName);
                     editTextCourseName.setText(courseName);
-                }
             }
         });
     }
@@ -90,9 +85,9 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void addScore() {
-        String studentName = editTextStuName.getText().toString().trim();
-        String courseName = editTextCourseName.getText().toString().trim();
-        String score = editTextScore.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString();
+        String courseName = editTextCourseName.getText().toString();
+        String score = editTextScore.getText().toString();
 
         if (studentName.isEmpty() || courseName.isEmpty() || score.isEmpty()) {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
@@ -102,13 +97,17 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
         // 根据姓名查询学生ID
-        Cursor studentCursor = db.query("users", new String[]{"_id"}, "name=?", new String[]{studentName}, null, null, null);
+        Cursor studentCursor = db.query("users", new String[]{"_id"},
+                "name=?",
+                new String[]{studentName},
+                null,
+                null,
+                null);
         int studentId = -1;
         if (studentCursor.moveToFirst()) {
             studentId = studentCursor.getInt(studentCursor.getColumnIndex("_id"));
         }
         studentCursor.close();
-
         if (studentId == -1) {
             Toast.makeText(this, "未找到该学生", Toast.LENGTH_SHORT).show();
             return;
@@ -121,7 +120,6 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
             courseId = courseCursor.getInt(courseCursor.getColumnIndex("course_id"));
         }
         courseCursor.close();
-
         if (courseId == -1) {
             Toast.makeText(this, "未找到该课程", Toast.LENGTH_SHORT).show();
             return;
@@ -142,9 +140,9 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         }
     }
     private void updateScore() {
-        String studentName = editTextStuName.getText().toString().trim();
-        String courseName = editTextCourseName.getText().toString().trim();
-        String score = editTextScore.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString();
+        String courseName = editTextCourseName.getText().toString();
+        String score = editTextScore.getText().toString();
 
         if (studentName.isEmpty() || courseName.isEmpty() || score.isEmpty()) {
             Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
@@ -184,7 +182,11 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         ContentValues values = new ContentValues();
         values.put("score", score);
 
-        int rowsAffected = writableDb.update("grades", values, "student_id=? AND course_id=?", new String[]{String.valueOf(studentId), String.valueOf(courseId)});
+        int rowsAffected = writableDb.update(
+                "grades",
+                values,
+                "student_id=? AND course_id=?",
+                new String[]{String.valueOf(studentId), String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
             clearInputs();
@@ -193,8 +195,8 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         }
     }
     private void deleteScore() {
-        String studentName = editTextStuName.getText().toString().trim();
-        String courseName = editTextCourseName.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString();
+        String courseName = editTextCourseName.getText().toString();
 
         if (studentName.isEmpty() || courseName.isEmpty()) {
             Toast.makeText(this, "请填写学生姓名和课程名称", Toast.LENGTH_SHORT).show();
@@ -204,13 +206,19 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
         // 根据姓名查询学生ID
-        Cursor studentCursor = db.query("users", new String[]{"_id"}, "name=?", new String[]{studentName}, null, null, null);
+        Cursor studentCursor = db.query(
+                "users",
+                new String[]{"_id"},
+                "name=?",
+                new String[]{studentName},
+                null,
+                null,
+                null);
         int studentId = -1;
         if (studentCursor.moveToFirst()) {
             studentId = studentCursor.getInt(studentCursor.getColumnIndex("_id"));
         }
         studentCursor.close();
-
         if (studentId == -1) {
             Toast.makeText(this, "未找到该学生", Toast.LENGTH_SHORT).show();
             return;
@@ -240,8 +248,8 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         }
     }
     private void searchScores() {
-        String studentName = editTextStuName.getText().toString().trim();
-        String courseName = editTextCourseName.getText().toString().trim();
+        String studentName = editTextStuName.getText().toString();
+        String courseName = editTextCourseName.getText().toString();
 
         SQLiteDatabase db = myHelper.getReadableDatabase();
 

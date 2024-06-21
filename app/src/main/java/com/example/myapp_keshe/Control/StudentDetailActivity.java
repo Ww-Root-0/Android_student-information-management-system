@@ -42,18 +42,14 @@ public class StudentDetailActivity extends AppCompatActivity implements View.OnC
         toolbar=findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        // 显示返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        // 设置按钮点击事件监听器
         buttonUpdate.setOnClickListener(this);
         buttonOK.setOnClickListener(this);
 
         // 获取传递的数据
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
             String name = extras.getString("name");
             originalName = name; // 存储原始姓名
             String password = extras.getString("password");
@@ -71,16 +67,6 @@ public class StudentDetailActivity extends AppCompatActivity implements View.OnC
             editTextPhone.setText(phone);
             editTextClass.setText(className);
             editTextDepartment.setText(department);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // 返回上一个活动
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,10 +86,8 @@ public class StudentDetailActivity extends AppCompatActivity implements View.OnC
 
             // 执行更新操作
             updateUserData(originalName, newName, newPassword, newGender, newAge, newPhone, newClass, newDepartment);
-
             // 将EditText设置为不可编辑状态
             setEditTextsEnabled(false);
-
             // 提示用户修改成功
             Toast.makeText(this, "信息修改成功", Toast.LENGTH_SHORT).show();
         }

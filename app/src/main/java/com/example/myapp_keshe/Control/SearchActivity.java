@@ -40,15 +40,13 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search); // 设置Activity的布局
-
-        myHelper = new MyHelper(this); // 初始化数据库帮助类
-
-        init(); // 初始化视图组件
-        populateSpinners(); // 填充下拉列表
+        setContentView(R.layout.search);
+        myHelper = new MyHelper(this);
+        init();
+        populateSpinners();
     }
 
-    // 初始化视图组件和设置事件监听器
+    // 初始化
     private void init() {
         // 通过findViewById获取布局文件中定义的视图组件
         editTextId = findViewById(R.id.editTextId);
@@ -60,26 +58,24 @@ public class SearchActivity extends AppCompatActivity {
         listViewResults = findViewById(R.id.listViewResults);
         toolbar=findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar); // 设置工具栏
-        // 显示返回按钮
+//        返回
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        // 设置搜索按钮的点击事件
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search(); // 调用search方法执行搜索
+                search();
             }
         });
 
-        // 设置单选按钮组的选择事件监听器
+        // 学生，课程，成绩--单选按钮响应
         radioGroupQueryType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // 根据选择的查询类型，调整界面上的输入框和下拉列表的可用状态
+                // 根据选择，调整界面上的输入框和下拉列表的可用状态
                 if (checkedId == R.id.radioStudent) {
                     spinnerCourseName.setEnabled(false);
                     spinnerClass.setEnabled(true);
@@ -93,21 +89,28 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     spinnerCourseName.setEnabled(true);
                     spinnerClass.setEnabled(true);
-                    editTextId.setHint("学号");
+                    editTextId.setEnabled(false);
                     editTextName.setHint("姓名");
                 }
             }
         });
     }
 
-    // 填充下拉列表
+    // 下拉列表内容
     private void populateSpinners() {
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
-        // 查询班级列表，填充班级下拉列表
+        //填充班级
         List<String> classList = new ArrayList<>();
         classList.add("");
-        Cursor cursor = db.query("users", new String[]{"class"}, null, null, "class", null, null);
+        Cursor cursor = db.query(
+                "users",
+                new String[]{"class"},
+                null,
+                null,
+                "class",
+                null,
+                null);
         while (cursor.moveToNext()) {
             classList.add(cursor.getString(cursor.getColumnIndexOrThrow("class")));
         }
@@ -115,10 +118,17 @@ public class SearchActivity extends AppCompatActivity {
         classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerClass.setAdapter(classAdapter);
 
-        // 查询课程名称列表，填充课程名称下拉列表
+        // 填充课程名称
         List<String> courseNameList = new ArrayList<>();
         courseNameList.add("");
-        cursor = db.query("courses", new String[]{"course_name"}, null, null, "course_name", null, null);
+        cursor = db.query(
+                "courses",
+                new String[]{"course_name"},
+                null,
+                null,
+                "course_name",
+                null,
+                null);
         while (cursor.moveToNext()) {
             courseNameList.add(cursor.getString(cursor.getColumnIndexOrThrow("course_name")));
         }
@@ -130,8 +140,8 @@ public class SearchActivity extends AppCompatActivity {
     // 根据用户输入和选择的查询类型执行搜索
     private void search() {
         // 获取用户输入的查询条件
-        String id = editTextId.getText().toString().trim();
-        String name = editTextName.getText().toString().trim();
+        String id = editTextId.getText().toString();
+        String name = editTextName.getText().toString();
         String className = spinnerClass.getSelectedItem() != null ? spinnerClass.getSelectedItem().toString() : "";
         String courseName = spinnerCourseName.getSelectedItem() != null ? spinnerCourseName.getSelectedItem().toString() : "";
 
@@ -176,7 +186,7 @@ public class SearchActivity extends AppCompatActivity {
             selectionArgs.add("%" + className + "%");
         }
 
-        // 执行查询
+        // 查询
         Cursor cursor = db.query(
                 "users",
                 new String[]{"_id", "name", "gender", "phone", "class", "department", "age", "password"},
@@ -187,14 +197,14 @@ public class SearchActivity extends AppCompatActivity {
                 null
         );
 
-        // 根据查询结果更新ListView
+        // 更新ListView
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的学生信息", Toast.LENGTH_SHORT).show();
         } else {
             StudentAdapter adapter = new StudentAdapter(this, cursor);
             listViewResults.setAdapter(adapter);
 
-            // 设置ListView的点击事件，点击时跳转到学生详情页面
+            // ListView点击时跳转到学生详情页面
             listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
