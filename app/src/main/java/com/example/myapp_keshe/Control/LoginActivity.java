@@ -29,15 +29,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        // 初始化 EditText
+        // 初始化
         editTextuserName = findViewById(R.id.usernameEditText);
         editTextPassword = findViewById(R.id.passwordEditText);
 
-        // 初始化按钮
         Button loginbutton = findViewById(R.id.loginbutton);
         Button registerbutton = findViewById(R.id.registerbutton);
 
-        // 为每个按钮设置点击监听器
         loginbutton.setOnClickListener(this);
         registerbutton.setOnClickListener(this);
     }
@@ -56,17 +54,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // 获取可读的数据库实例
             db = myHelper.getReadableDatabase();
-            // 查询数据库中的用户名和密码
             Cursor cursor = db.query(
-                    "users",              // 表名
-                    new String[]{"name", "password"},  // 返回的列
+                    "users",
+                    new String[]{"name", "password"},
                     "name=? AND password=?",  // WHERE 子句
-                    new String[]{username, password},  // WHERE 子句中的占位符的值
-                    null,                // GROUP BY
-                    null,                // HAVING
-                    null                 // ORDER BY
+                    new String[]{username, password},
+                    null,
+                    null,
+                    null
             );
             // 检查查询结果
             if (cursor.moveToFirst()) {
@@ -75,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // 跳转到新的页面
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
-                finish(); // 可选：关闭当前 Activity
+                finish();
             } else {
                 // 登录失败
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show();

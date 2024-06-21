@@ -189,6 +189,7 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 new String[]{String.valueOf(studentId), String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
+            searchScores();
             clearInputs();
         } else {
             Toast.makeText(this, "更新失败，可能是因为找不到记录", Toast.LENGTH_SHORT).show();
@@ -268,12 +269,12 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
 
         Cursor cursor = db.query(
                 "grades", // 表名
-                new String[]{"grade_id AS _id", "student_id", "course_id", "score"}, // 返回的列
+                new String[]{"grade_id AS _id", "student_id", "course_id", "score"},
                 selection.toString(), // WHERE 子句
-                selectionArgs.toArray(new String[0]), // WHERE 子句中的占位符的值
-                null, // GROUP BY 子句
-                null, // HAVING 子句
-                null // ORDER BY 子句
+                selectionArgs.toArray(new String[0]),
+                null,
+                null,
+                null
         );
 
         if (cursor.getCount() == 0) {
@@ -286,22 +287,22 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 String courseIdFromCursor = cursor.getString(cursor.getColumnIndex("course_id"));
 
                 Cursor cursor1 = db.query(
-                        "users", // 表名
-                        new String[]{"name"}, // 返回的列
+                        "users",
+                        new String[]{"name"},
                         "_id=?", // WHERE 子句
-                        new String[]{studentIdFromCursor}, // WHERE 子句中的占位符的值
-                        null, // GROUP BY 子句
-                        null, // HAVING 子句
-                        null // ORDER BY 子句
+                        new String[]{studentIdFromCursor},
+                        null,
+                        null,
+                        null
                 );
                 Cursor cursor2 = db.query(
-                        "courses", // 表名
-                        new String[]{"course_name"}, // 返回的列
+                        "courses",
+                        new String[]{"course_name"},
                         "course_id=?", // WHERE 子句
-                        new String[]{courseIdFromCursor}, // WHERE 子句中的占位符的值
-                        null, // GROUP BY 子句
-                        null, // HAVING 子句
-                        null // ORDER BY 子句
+                        new String[]{courseIdFromCursor},
+                        null,
+                        null,
+                        null
                 );
 
                 if (cursor1.moveToFirst() && cursor2.moveToFirst()) {

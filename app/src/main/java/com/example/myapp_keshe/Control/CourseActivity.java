@@ -133,6 +133,7 @@ public class CourseActivity extends AppCompatActivity {
         db.execSQL("UPDATE courses SET course_code = ?, instructor = ?, credits = ? WHERE course_name = ?",
                 new Object[]{courseCode.isEmpty() ? null : courseCode, instructor.isEmpty() ? null : instructor, creditsStr, courseName.isEmpty() ? null : courseName});
         Toast.makeText(this, "课程信息更新成功", Toast.LENGTH_SHORT).show();
+        searchCourses();
         clearInputs();
     }
 
