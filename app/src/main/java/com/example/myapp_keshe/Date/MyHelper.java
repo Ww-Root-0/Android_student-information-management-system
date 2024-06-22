@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mydatabase.db";
-    private static final int DATABASE_VERSION = 2; // 增加数据库版本号
+    private static final int DATABASE_VERSION = 2;
 
     public MyHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,7 +23,7 @@ public class MyHelper extends SQLiteOpenHelper {
                 "gender TEXT, " +
                 "age INTEGER, " +
                 "phone TEXT, " +
-                "department TEXT" + // 添加 department 列
+                "department TEXT" +
                 ")");
 
         // 创建课程表

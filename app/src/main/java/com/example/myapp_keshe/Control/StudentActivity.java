@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
@@ -95,16 +96,12 @@ public class StudentActivity extends AppCompatActivity {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                String gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"));
                 int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
-                String className = cursor.getString(cursor.getColumnIndexOrThrow("class"));
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow("phone"));
                 String department = cursor.getString(cursor.getColumnIndexOrThrow("department"));
 
                 editTextName.setText(name);
-                setSpinnerSelection(spinnerGender, gender);
                 editTextAge.setText(String.valueOf(age));
-                setSpinnerSelection(spinnerClass, className);
                 editTextPhone.setText(phone);
                 editTextDepartment.setText(department);
             }
@@ -138,6 +135,11 @@ public class StudentActivity extends AppCompatActivity {
         spinnerGender.setAdapter(genderAdapter);
     }
 
+
+
+
+
+
     // 添加学生信息
     private void addStudent() {
         String name = editTextName.getText().toString();
@@ -152,8 +154,12 @@ public class StudentActivity extends AppCompatActivity {
         db.execSQL("INSERT INTO users (name, gender, age, class, phone, department) VALUES (?, ?, ?, ?, ?, ?)",
                 new Object[]{name.isEmpty() ? null : name, gender.isEmpty() ? null : gender, ageStr, className.isEmpty() ? null : className, phone.isEmpty() ? null : phone, department.isEmpty() ? null : department});
         Toast.makeText(this, "学生信息添加成功", Toast.LENGTH_SHORT).show();
-        clearInputs();
     }
+
+
+
+
+
 
     // 更新学生信息
     private void updateStudent() {
@@ -172,10 +178,14 @@ public class StudentActivity extends AppCompatActivity {
                         phone.isEmpty() ? null : phone,
                         department.isEmpty() ? null : department,
                         name.isEmpty() ? null : name});
-        searchStudents();
         Toast.makeText(this, "学生信息更新成功", Toast.LENGTH_SHORT).show();
-        clearInputs();
     }
+
+
+
+
+
+
 
     // 删除学生信息
     private void deleteStudent() {
@@ -189,8 +199,15 @@ public class StudentActivity extends AppCompatActivity {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("DELETE FROM users WHERE name = ?", new Object[]{name});
         Toast.makeText(this, "学生信息删除成功", Toast.LENGTH_SHORT).show();
-        clearInputs();
     }
+
+
+
+
+
+
+
+
 
     // 查询学生信息
     private void searchStudents() {
@@ -245,32 +262,35 @@ public class StudentActivity extends AppCompatActivity {
                 null
         );
 
+        // 更新ListView
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "没有找到符合条件的学生信息", Toast.LENGTH_SHORT).show();
         } else {
-            // 使用自定义的StudentAdapter来显示数据
-            StudentAdapter adapter = new StudentAdapter(this, cursor);
-            listViewResults.setAdapter(adapter);
-        }
-    }
-    // 清除输入框内容
-    private void clearInputs() {
-        editTextName.setText("");
-        spinnerGender.setSelection(0);
-        editTextAge.setText("");
-        spinnerClass.setSelection(0);
-        editTextPhone.setText("");
-        editTextDepartment.setText("");
-    }
+            // 定义要绑定的数据列
+            String[] fromColumns = {"_id", "name", "gender", "age", "class", "phone", "department"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewId,
+                    R.id.textViewName,
+                    R.id.textViewGender,
+                    R.id.textViewAge,
+                    R.id.textViewClass,
+                    R.id.textViewPhone,
+                    R.id.textViewDepartment
+            };
 
-    // 设置Spinner的选中项
-    private void setSpinnerSelection(Spinner spinner, String value) {
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
-        for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getItem(i).equals(value)) {
-                spinner.setSelection(i);
-                break;
-            }
-        }
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.stulistview, // 列表项布局
+                    cursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
+
+            // 设置适配器
+            listViewResults.setAdapter(adapter);
     }
+}
 }

@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,8 +86,6 @@ public class CourseActivity extends AppCompatActivity {
                 searchCourses();
             }
         });
-
-        // 设置ListView的点击事件监听器
         listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,6 +101,7 @@ public class CourseActivity extends AppCompatActivity {
                 editTextCredits.setText(String.valueOf(credits));
             }
         });
+
     }
 
     // 添加课程信息
@@ -118,7 +118,6 @@ public class CourseActivity extends AppCompatActivity {
                         instructor.isEmpty() ? null : instructor,
                         creditsStr});
         Toast.makeText(this, "课程信息添加成功", Toast.LENGTH_SHORT).show();
-        clearInputs();
     }
 
     // 更新课程信息
@@ -133,8 +132,6 @@ public class CourseActivity extends AppCompatActivity {
         db.execSQL("UPDATE courses SET course_code = ?, instructor = ?, credits = ? WHERE course_name = ?",
                 new Object[]{courseCode.isEmpty() ? null : courseCode, instructor.isEmpty() ? null : instructor, creditsStr, courseName.isEmpty() ? null : courseName});
         Toast.makeText(this, "课程信息更新成功", Toast.LENGTH_SHORT).show();
-        searchCourses();
-        clearInputs();
     }
 
     // 删除课程信息
@@ -149,7 +146,6 @@ public class CourseActivity extends AppCompatActivity {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         db.execSQL("DELETE FROM courses WHERE course_name = ?", new Object[]{courseName});
         Toast.makeText(this, "课程信息删除成功", Toast.LENGTH_SHORT).show();
-        clearInputs();
     }
 
     // 查询课程信息
@@ -193,19 +189,32 @@ public class CourseActivity extends AppCompatActivity {
                 null
         );
 
+        // 根据查询结果更新ListView
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "没有找到符合条件的信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "没有找到符合条件的课程信息", Toast.LENGTH_SHORT).show();
         } else {
-            // 自定义的CourseAdapter来显示数据
-            CourseAdapter adapter = new CourseAdapter(this, cursor);
+            // 定义要绑定的数据列
+            String[] fromColumns = {"_id", "course_name", "course_code", "instructor", "credits"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewCourseId,
+                    R.id.textViewCourseName,
+                    R.id.textViewCourseCode,
+                    R.id.textViewInstructor,
+                    R.id.textViewCredits
+            };
+
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.courselistview, // 列表项布局
+                    cursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
             listViewResults.setAdapter(adapter);
-        }
     }
-    // 清除输入框内容
-    private void clearInputs() {
-        editTextCourseName.setText("");
-        editTextCourseCode.setText("");
-        editTextInstructor.setText("");
-        editTextCredits.setText("");
+
     }
 }

@@ -2,12 +2,14 @@ package com.example.myapp_keshe.Control;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,17 +59,21 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Score selectedScore = (Score) parent.getItemAtPosition(position);
-                    String score = selectedScore.getScore();
-                    String studentName = selectedScore.getStudentName();
-                    String courseName = selectedScore.getCourseName();
+                // 获取点击的Cursor对象
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-                    // 你可以在这里处理选中的Score对象，例如更新UI
-                    editTextScore.setText(score);
-                    editTextStuName.setText(studentName);
-                    editTextCourseName.setText(courseName);
+                // 从Cursor中获取数据
+                String score = cursor.getString(cursor.getColumnIndex("score"));
+                String studentName = cursor.getString(cursor.getColumnIndex("student_name"));
+                String courseName = cursor.getString(cursor.getColumnIndex("course_name"));
+
+                // 将数据设置到EditText中显示
+                editTextScore.setText(score);
+                editTextStuName.setText(studentName);
+                editTextCourseName.setText(courseName);
             }
         });
+
     }
 
     @Override
@@ -84,6 +90,11 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
+
+
+
+
     private void addScore() {
         String studentName = editTextStuName.getText().toString();
         String courseName = editTextCourseName.getText().toString();
@@ -97,7 +108,8 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
         // 根据姓名查询学生ID
-        Cursor studentCursor = db.query("users", new String[]{"_id"},
+        Cursor studentCursor = db.query("users",
+                new String[]{"_id"},
                 "name=?",
                 new String[]{studentName},
                 null,
@@ -134,7 +146,6 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         long newRowId = db.insert("grades", null, values);
         if (newRowId != -1) {
             Toast.makeText(this, "添加成功", Toast.LENGTH_SHORT).show();
-            clearInputs();
         } else {
             Toast.makeText(this, "添加失败", Toast.LENGTH_SHORT).show();
         }
@@ -186,11 +197,10 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 "grades",
                 values,
                 "student_id=? AND course_id=?",
-                new String[]{String.valueOf(studentId), String.valueOf(courseId)});
+                new String[]{String.valueOf(studentId),
+                        String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
-            searchScores();
-            clearInputs();
         } else {
             Toast.makeText(this, "更新失败，可能是因为找不到记录", Toast.LENGTH_SHORT).show();
         }
@@ -243,7 +253,6 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
         int rowsAffected = writableDb.delete("grades", "student_id=? AND course_id=?", new String[]{String.valueOf(studentId), String.valueOf(courseId)});
         if (rowsAffected > 0) {
             Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
-            clearInputs();
         } else {
             Toast.makeText(this, "删除失败，可能是因为找不到记录", Toast.LENGTH_SHORT).show();
         }
@@ -277,19 +286,22 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 null
         );
 
+        // 根据查询结果更新ListView
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的成绩", Toast.LENGTH_SHORT).show();
         } else {
             List<Score> scoreList = new ArrayList<>();
             while (cursor.moveToNext()) {
+                // 获取成绩及相关学生和课程信息
                 String score = cursor.getString(cursor.getColumnIndex("score"));
                 String studentIdFromCursor = cursor.getString(cursor.getColumnIndex("student_id"));
                 String courseIdFromCursor = cursor.getString(cursor.getColumnIndex("course_id"));
 
+                // 查询学生姓名和课程名称
                 Cursor cursor1 = db.query(
                         "users",
                         new String[]{"name"},
-                        "_id=?", // WHERE 子句
+                        "_id=?",
                         new String[]{studentIdFromCursor},
                         null,
                         null,
@@ -298,7 +310,7 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
                 Cursor cursor2 = db.query(
                         "courses",
                         new String[]{"course_name"},
-                        "course_id=?", // WHERE 子句
+                        "course_id=?",
                         new String[]{courseIdFromCursor},
                         null,
                         null,
@@ -316,14 +328,34 @@ public class ScoreActivity extends AppCompatActivity implements View.OnClickList
             }
             cursor.close();
 
-            ScoreAdapter adapter = new ScoreAdapter(this, scoreList);
+            // 创建一个新的Cursor来显示数据
+            MatrixCursor matrixCursor = new MatrixCursor(new String[]{"_id", "student_name", "course_name", "score"});
+            int id = 0;
+            for (Score score : scoreList) {
+                matrixCursor.addRow(new Object[]{id++, score.getStudentName(), score.getCourseName(), score.getScore()});
+            }
+
+            // 定义要绑定的数据列
+            String[] fromColumns = {"student_name", "course_name", "score"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewStudentName,
+                    R.id.textViewCourseName,
+                    R.id.textViewScore
+            };
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.scorelistview, // 列表项布局
+                    matrixCursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
+
+            // 设置适配器
             listViewResults.setAdapter(adapter);
         }
     }
-    // 清除输入框内容
-    private void clearInputs() {
-        editTextStuName.setText("");
-        editTextCourseName.setText("");
-        editTextScore.setText("");
-    }
+
 }

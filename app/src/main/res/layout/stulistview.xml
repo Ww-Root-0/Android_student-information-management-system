@@ -12,20 +12,17 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewId"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ID"
+            android:text="学号:"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/textViewName"
+            android:id="@+id/textViewId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Name"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
     </LinearLayout>
@@ -37,20 +34,17 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewGender"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Gender"
+            android:text="姓名:"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/textViewAge"
+            android:id="@+id/textViewName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Age"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
     </LinearLayout>
@@ -62,11 +56,75 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性别:"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/textViewGender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- 第四行 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="年龄:"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/textViewAge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- 第五行 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="班级:"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+
+        <TextView
             android:id="@+id/textViewClass"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Class"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- 第六行 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电话:"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
 
@@ -75,17 +133,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Phone"
             android:textSize="18sp"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
-    <!-- 第四行，只有一个TextView时，可以单独放置或创建一个新的LinearLayout -->
-    <TextView
-        android:id="@+id/textViewDepartment"
-        android:layout_width="wrap_content"
+    <!-- 第七行 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Department"
-        android:textSize="18sp"
-        android:textColor="@android:color/black" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="院系:"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/textViewDepartment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.myapp_keshe.Control;// 导入所需的类和包
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -100,7 +102,6 @@ public class SearchActivity extends AppCompatActivity {
     private void populateSpinners() {
         SQLiteDatabase db = myHelper.getReadableDatabase();
 
-        //填充班级
         List<String> classList = new ArrayList<>();
         classList.add("");
         Cursor cursor = db.query(
@@ -117,6 +118,7 @@ public class SearchActivity extends AppCompatActivity {
         ArrayAdapter<String> classAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classList);
         classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerClass.setAdapter(classAdapter);
+
 
         // 填充课程名称
         List<String> courseNameList = new ArrayList<>();
@@ -137,6 +139,10 @@ public class SearchActivity extends AppCompatActivity {
         spinnerCourseName.setAdapter(courseNameAdapter);
     }
 
+
+
+
+
     // 根据用户输入和选择的查询类型执行搜索
     private void search() {
         // 获取用户输入的查询条件
@@ -152,7 +158,12 @@ public class SearchActivity extends AppCompatActivity {
             return;
         }
 
-        // 根据查询类型调用相应的搜索方法
+
+
+
+
+
+        // 根据查询类型调用搜索方法
         if (selectedId == R.id.radioStudent) {
             searchStudents(id, name, className);
         } else if (selectedId == R.id.radioCourse) {
@@ -161,6 +172,12 @@ public class SearchActivity extends AppCompatActivity {
             searchScores(id, name, className, courseName);
         }
     }
+
+
+
+
+
+
 
     // 搜索学生信息的方法
     private void searchStudents(String id, String name, String className) {
@@ -201,7 +218,30 @@ public class SearchActivity extends AppCompatActivity {
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的学生信息", Toast.LENGTH_SHORT).show();
         } else {
-            StudentAdapter adapter = new StudentAdapter(this, cursor);
+            // 定义要绑定的数据列
+            String[] fromColumns = {"_id", "name", "gender", "age", "class", "phone", "department"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewId,
+                    R.id.textViewName,
+                    R.id.textViewGender,
+                    R.id.textViewAge,
+                    R.id.textViewClass,
+                    R.id.textViewPhone,
+                    R.id.textViewDepartment
+            };
+
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.stulistview, // 列表项布局
+                    cursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
+
+            // 设置适配器
             listViewResults.setAdapter(adapter);
 
             // ListView点击时跳转到学生详情页面
@@ -232,6 +272,12 @@ public class SearchActivity extends AppCompatActivity {
             });
         }
     }
+
+
+
+
+
+
 
     // 搜索课程信息的方法
     private void searchCourses(String id, String name, String courseName) {
@@ -272,7 +318,28 @@ public class SearchActivity extends AppCompatActivity {
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "没有找到符合条件的课程信息", Toast.LENGTH_SHORT).show();
         } else {
-            CourseAdapter adapter = new CourseAdapter(this, cursor);
+            // 定义要绑定的数据列
+            String[] fromColumns = {"_id", "course_name", "course_code", "instructor", "credits"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewCourseId,
+                    R.id.textViewCourseName,
+                    R.id.textViewCourseCode,
+                    R.id.textViewInstructor,
+                    R.id.textViewCredits
+            };
+
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.courselistview, // 列表项布局
+                    cursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
+
+            // 设置适配器
             listViewResults.setAdapter(adapter);
 
             // 设置ListView的点击事件，点击时跳转到课程详情页面
@@ -299,6 +366,12 @@ public class SearchActivity extends AppCompatActivity {
             });
         }
     }
+
+
+
+
+
+
 
     // 搜索成绩的方法
     private void searchScores(String studentId, String studentName, String className, String courseName) {
@@ -329,12 +402,16 @@ public class SearchActivity extends AppCompatActivity {
             selectionArgs.add("%" + courseName + "%");
         }
 
+        // 如果没有任何条件，则查询所有成绩
+        String selectionString = selection.length() > 0 ? selection.toString() : null;
+        String[] selectionArgsArray = selectionArgs.toArray(new String[0]);
+
         // 执行查询
         Cursor cursor = db.query(
                 "grades",
                 new String[]{"grade_id AS _id", "student_id", "course_id", "score"},
-                selection.toString(),
-                selectionArgs.toArray(new String[0]),
+                selectionString,
+                selectionArgsArray,
                 null,
                 null,
                 null
@@ -382,23 +459,52 @@ public class SearchActivity extends AppCompatActivity {
             }
             cursor.close();
 
-            ScoreAdapter adapter = new ScoreAdapter(this, scoreList);
+            // 创建一个新的Cursor来显示数据
+            MatrixCursor matrixCursor = new MatrixCursor(new String[]{"_id", "student_name", "course_name", "score"});
+            int id = 0;
+            for (Score score : scoreList) {
+                matrixCursor.addRow(new Object[]{id++, score.getStudentName(), score.getCourseName(), score.getScore()});
+            }
+
+            // 定义要绑定的数据列
+            String[] fromColumns = {"student_name", "course_name", "score"};
+            // 定义要绑定到的视图
+            int[] toViews = {
+                    R.id.textViewStudentName,
+                    R.id.textViewCourseName,
+                    R.id.textViewScore
+            };
+            // 创建适配器
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                    this, // 上下文
+                    R.layout.scorelistview, // 列表项布局
+                    matrixCursor, // 数据源
+                    fromColumns, // 数据列
+                    toViews, // 视图ID
+                    0 // 标志
+            );
+
+            // 设置适配器
             listViewResults.setAdapter(adapter);
 
-            // 设置ListView的点击事件，点击时跳转到成绩详情页面
+            // 跳转到成绩详情页面
             listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Score score = (Score) parent.getItemAtPosition(position);
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    String studentName = cursor.getString(cursor.getColumnIndex("student_name"));
+                    String courseName = cursor.getString(cursor.getColumnIndex("course_name"));
+                    String score = cursor.getString(cursor.getColumnIndex("score"));
 
                     // 将成绩信息传递给详情页面
                     Intent intent = new Intent(SearchActivity.this, ScoreDetailActivity.class);
-                    intent.putExtra("studentName", score.getStudentName());
-                    intent.putExtra("courseName", score.getCourseName());
-                    intent.putExtra("score", score.getScore());
+                    intent.putExtra("studentName", studentName);
+                    intent.putExtra("courseName", courseName);
+                    intent.putExtra("score", score);
                     startActivity(intent);
                 }
             });
         }
     }
+
 }

@@ -28,16 +28,12 @@ public class ScoreDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.score_xx);
-        toolbar=findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
         // 显示返回按钮
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // 设置返回按钮的点击事件
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
-
         myHelper = new MyHelper(this);
 
         editTextStudentName = findViewById(R.id.editTextStudentName);
@@ -71,7 +67,7 @@ public class ScoreDetailActivity extends AppCompatActivity implements View.OnCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish(); // 返回上一个活动
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -87,23 +83,17 @@ public class ScoreDetailActivity extends AppCompatActivity implements View.OnCli
             String newStudentName = editTextStudentName.getText().toString();
             String newCourseName = editTextCourseName.getText().toString();
             String newScore = editTextScore.getText().toString();
-
             // 获取新的学生ID和课程ID
             String newStudentId = getStudentIdByName(newStudentName);
             String newCourseId = getCourseIdByName(newCourseName);
-
             // 执行更新操作
             updateScoreData(originalStudentId, originalCourseId, newStudentId, newCourseId, newScore);
-
             // 将EditText设置为不可编辑状态
             setEditTextsEnabled(false);
-
-            // 提示用户修改成功
             Toast.makeText(this, "成绩信息修改成功", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // 设置EditText的可编辑状态
     private void setEditTextsEnabled(boolean enabled) {
         editTextStudentName.setEnabled(enabled);
         editTextCourseName.setEnabled(enabled);

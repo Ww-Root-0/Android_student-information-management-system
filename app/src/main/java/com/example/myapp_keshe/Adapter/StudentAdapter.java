@@ -23,7 +23,6 @@ public class StudentAdapter extends CursorAdapter {
         // 使用布局填充器从布局资源中创建新的视图
         return LayoutInflater.from(context).inflate(R.layout.stulistview, parent, false);
     }
-
     // 绑定视图
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
